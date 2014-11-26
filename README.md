@@ -1,4 +1,4 @@
-#RaspiCam: C++ API for using Raspberry camera with/without OpenCv
+#RaspiCam: C++ API for using Raspberry camera (with OpenCV)
 
 This library allows to use the Raspberry Pi Camera under BSD License. 
 
