@@ -3,8 +3,8 @@
 This library allows to use the Raspberry Pi Camera under BSD License. 
 
 The project is started by the AVA research group (rafael Muñoz Salinas; rmsalinas@uco.es) and is now maintained
-on this GIT repository by Cédric Verstraeten. Please note that is NOT the OFFICIAL repository of RaspiCam, these can be found [here](http://www.uco.es/investiga/grupos/ava/node/40)
-This library is used in the [Kerberos.io](https://github.com/kerberos-io) project, and that's also the reason why we are maintaining the RaspiCam project.
+on this GIT repository by Cédric Verstraeten. Please note that is NOT the OFFICIAL repository of RaspiCam, these can be found [here](http://www.uco.es/investiga/grupos/ava/node/40).
+This repository is used in the [Kerberos.io](https://github.com/kerberos-io) project.
 
 ##Release notes
 
@@ -194,5 +194,6 @@ Finally, create,compile and execute
 	 
  
 If you do not like cmake:
+
 	g++ simpletest_raspicam_cv.cpp -o  simpletest_raspicam_cv -I/usr/local/include/ -lraspicam -lraspicam_cv -lmmal -lmmal_core -lmmal_util -lopencv_core -lopencv_highgui 
 	
