@@ -1,0 +1,29 @@
+0.1.1
+  - Moved to c++11  mutex  and condition_variables. Bug fixed that caused random dead lock condition in grab()
+0.1.0
+  - Bug fixed in release for RapiCam and RaspiCam_Cv
+0.0.7
+  - Added classes  RaspiCam_Still and RaspiCam_Still_Cv for still camera mode
+0.0.6
+  - Bug ins cv camera corrected
+0.0.5 
+  - getImageBuffeSize change by getImageBufferSize (sorry)
+  - Change in capture format. Now, it is able to capture in RGB at high speed. 
+  - The second parameter of retrieve is now useless. Format must be specified in Raspicam::(set/get)Format before opening the camera and can not be change during operation.
+  - RaspiCam_Cv captures in BGR, which is obtained by converting from RGB. Therefore,  performance drops to half repect to the RaspiCam in RGB mode when using 1280x960.
+0.0.4
+  - Added shutter speed camera control
+  - OpenCv set/get params are now scaled to [0,100]
+  - Added more command line options in test programs
+0.0.3
+  - Fixed error in color conversion (rgb and bgr were swapped)
+  - Added command line options in raspicam_test to adjust exposure
+  - Changes in RaspiCam_Cv so that exposure can be adjusted. Very simply.
+0.0.2
+ - Decoupled opening from the start of capture in RaspiCam if desired. RapiCam::open and RaspiCam::startCapture
+ - Added  function RaspiCam::getId and RaspiCam_Cv::getId
+ - Added a new way to convert yuv2rgb which is a bit faster.Thanks to Stefan Gufman (gruffypuffy at gmail dot com)
+ - Added command line option -test_speed to utils programs (do not save images to memory)
+ - Removed useless code in private_impl
+0.0.1
+Initial libary
