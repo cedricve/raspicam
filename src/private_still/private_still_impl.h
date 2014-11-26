@@ -118,6 +118,13 @@ namespace raspicam {
                 encoder_output_port = NULL;
 		_isInitialized=false;
             }
+
+            ~Private_Impl_Still()
+            {
+                destroyCamera();
+                destroyEncoder();
+            }
+
             int initialize();
             int startCapture ( imageTakenCallback userCallback, unsigned char * preallocated_data, unsigned int offset, unsigned int length );
             void stopCapture();
