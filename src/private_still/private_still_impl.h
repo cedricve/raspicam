@@ -122,11 +122,11 @@ namespace raspicam {
 
             ~Private_Impl_Still()
             {
-                LOG_ERROR("deleting -- camera");
+                cout << API_NAME << ": deleting camera.\n";
                 destroyCamera();
                 destroyEncoder();
                 mmal_connection_destroy(encoder_connection);
-                LOG_ERROR("end deleting -- camera");
+                cout << API_NAME << ": end deleting camera.\n";
             }
 
             int initialize();
