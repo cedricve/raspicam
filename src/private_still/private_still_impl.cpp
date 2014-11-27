@@ -46,6 +46,11 @@ using namespace std;
 namespace raspicam {
     namespace _private
     {
+
+         
+
+
+
         typedef struct {
             Private_Impl_Still * cameraBoard;
             MMAL_POOL_T * encoderPool;
@@ -112,31 +117,7 @@ namespace raspicam {
             }
         }
 
-        Private_Impl_Still::~Private_Impl_Still()
-        {
-            // Disable camera_video_port
-            if ( camera_still_port && camera_still_port->is_enabled ) {
-                mmal_port_disable ( camera_still_port );
-                camera_still_port = NULL;
-            }
-            ////
-            // Disable all our ports that are not handled by connections
-
-            if (camera)
-                mmal_component_disable (camera);
-
-
-            if ( encoder_pool ) {
-                mmal_port_pool_destroy ( encoder->output[0], encoder_pool );
-            }
-            if ( encoder ) {
-                mmal_component_destroy ( encoder );
-                encoder = NULL;
-            }
-            //std::cout << API_NAME << ": end deleting camera.\n";
-        }
-
-
+       
         void Private_Impl_Still::setDefaults() {
             width = 640;
             height = 480;
@@ -409,6 +390,29 @@ namespace raspicam {
         
         size_t Private_Impl_Still::getImageBufferSize() const{
 	    return width*height*3+54 ;//oversize the buffer so to fit BMP images
+        }
+
+        Private_Impl_Still::~Private_Impl_Still(){
+            // Disable camera_video_port
+            if ( camera_still_port && camera_still_port->is_enabled ) {
+                mmal_port_disable ( camera_still_port );
+                camera_still_port = NULL;
+            }
+            ////
+            // Disable all our ports that are not handled by connections
+
+            if (camera)
+                mmal_component_disable (camera);
+
+
+            if ( encoder_pool ) {
+                mmal_port_pool_destroy ( encoder->output[0], encoder_pool );
+            }
+            if ( encoder ) {
+                mmal_component_destroy ( encoder );
+                encoder = NULL;
+            }
+            //std::cout << API_NAME << ": end deleting camera.\n";
         }
 
         int Private_Impl_Still::startCapture ( imageTakenCallback userCallback, unsigned char * preallocated_data, unsigned int offset, unsigned int length ) {
