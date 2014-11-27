@@ -123,11 +123,11 @@ namespace raspicam {
 
             ~Private_Impl_Still()
             {
-                cout << API_NAME << ": deleting camera.\n";
+                std::cout << API_NAME << ": deleting camera.\n";
                 destroyCamera();
                 destroyEncoder();
                 mmal_connection_destroy(encoder_connection);
-                cout << API_NAME << ": end deleting camera.\n";
+                std::cout << API_NAME << ": end deleting camera.\n";
             }
 
             int initialize();
