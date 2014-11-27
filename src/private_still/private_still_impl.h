@@ -121,6 +121,7 @@ namespace raspicam {
 		       _isInitialized=false;
             }
 
+            ~Private_Impl_Still();
             
             int initialize();
             int startCapture ( imageTakenCallback userCallback, unsigned char * preallocated_data, unsigned int offset, unsigned int length );

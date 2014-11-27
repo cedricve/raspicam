@@ -66,7 +66,8 @@ namespace raspicam {
             mmal_buffer_header_release ( buffer );
         }
 
-        static void buffer_callback ( MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer ) {
+        static void buffer_callback ( MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer )
+        {
             RASPICAM_USERDATA *userdata = ( RASPICAM_USERDATA* ) port->userdata;
             if ( userdata == NULL || userdata->cameraBoard == NULL ) {
 
@@ -112,32 +113,28 @@ namespace raspicam {
         }
 
         Private_Impl_Still::~Private_Impl_Still()
-            {
-
-
-                // Disable camera_video_port
-                if ( camera_still_port && camera_still_port->is_enabled ) {
-                    mmal_port_disable ( camera_still_port );
-                    camera_still_port = NULL;
-                }
-                ////
-                // Disable all our ports that are not handled by connections
-
-                if (camera)
-                    mmal_component_disable (camera);
-
-
-                if ( encoder_pool ) {
-                    mmal_port_pool_destroy ( encoder->output[0], encoder_pool );
-                }
-                if ( encoder ) {
-                    mmal_component_destroy ( encoder );
-                    encoder = NULL;
-                }
-
-
-                //std::cout << API_NAME << ": end deleting camera.\n";
+        {
+            // Disable camera_video_port
+            if ( camera_still_port && camera_still_port->is_enabled ) {
+                mmal_port_disable ( camera_still_port );
+                camera_still_port = NULL;
             }
+            ////
+            // Disable all our ports that are not handled by connections
+
+            if (camera)
+                mmal_component_disable (camera);
+
+
+            if ( encoder_pool ) {
+                mmal_port_pool_destroy ( encoder->output[0], encoder_pool );
+            }
+            if ( encoder ) {
+                mmal_component_destroy ( encoder );
+                encoder = NULL;
+            }
+            //std::cout << API_NAME << ": end deleting camera.\n";
+        }
 
 
         void Private_Impl_Still::setDefaults() {
