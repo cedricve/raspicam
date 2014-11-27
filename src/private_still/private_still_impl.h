@@ -40,6 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "raspicamtypes.h"
 #include "mmal/mmal.h"
 #include "mmal/mmal_connection.h"
+#include <iostream>
 #include <string>
 #define MMAL_CAMERA_CAPTURE_PORT 2
 #define STILLS_FRAME_RATE_NUM 3
