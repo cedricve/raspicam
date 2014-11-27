@@ -106,6 +106,7 @@ namespace raspicam {
 	    bool _isInitialized;
             public:
             const char * API_NAME;
+
             Private_Impl_Still() {
                 API_NAME = "Private_Impl_Still";
                 setDefaults();
@@ -121,9 +122,11 @@ namespace raspicam {
 
             ~Private_Impl_Still()
             {
+                LOG_ERROR("deleting -- camera");
                 destroyCamera();
                 destroyEncoder();
                 mmal_connection_destroy(encoder_connection);
+                LOG_ERROR("end deleting -- camera");
             }
 
             int initialize();
