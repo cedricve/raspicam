@@ -402,14 +402,18 @@ namespace raspicam {
             // Disable all our ports that are not handled by connections
 
             if (camera)
+            {
                 mmal_component_disable (camera);
 
+            }
 
             if ( encoder_pool ) {
                 mmal_port_pool_destroy ( encoder->output[0], encoder_pool );
             }
             if ( encoder ) {
                 mmal_component_destroy ( encoder );
+                mmal_component_destroy (camera);
+                camera = NULL;
                 encoder = NULL;
             }
             //std::cout << API_NAME << ": end deleting camera.\n";
