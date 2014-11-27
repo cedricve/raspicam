@@ -125,12 +125,25 @@ namespace raspicam {
             {
                 //std::cout << API_NAME << ": deleting camera.\n";
 
-                //mmal_connection_destroy(encoder_connection);
-                mmal_port_disable(camera_still_port);
-                mmal_component_disable (camera);
+                // Disable camera_video_port
+                if ( camera_still_port && camera_still_port->is_enabled ) {
+                    mmal_port_disable ( camera_still_port );
+                    camera_still_port = NULL;
+                }
+                ////
+                // Disable all our ports that are not handled by connections
+                if (camera)
+                    mmal_component_disable (camera);
 
-                //destroyCamera();
-                //destroyEncoder();
+
+                if ( encoder_pool ) {
+                    mmal_port_pool_destroy ( encoder->output[0], encoder_pool );
+                }
+                if ( encoder ) {
+                    mmal_component_destroy ( encoder );
+                    encoder = NULL;
+                }
+
 
                 //std::cout << API_NAME << ": end deleting camera.\n";
             }
