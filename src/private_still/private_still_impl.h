@@ -106,6 +106,7 @@ namespace raspicam {
 	    bool _isInitialized;
             public:
             const char * API_NAME;
+            
             Private_Impl_Still() {
                 API_NAME = "Private_Impl_Still";
                 setDefaults();
