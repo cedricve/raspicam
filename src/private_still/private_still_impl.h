@@ -121,34 +121,7 @@ namespace raspicam {
 		       _isInitialized=false;
             }
 
-            ~Private_Impl_Still()
-            {
-
-
-                // Disable camera_video_port
-                if ( camera_still_port && camera_still_port->is_enabled ) {
-                    mmal_port_disable ( camera_still_port );
-                    camera_still_port = NULL;
-                }
-                ////
-                // Disable all our ports that are not handled by connections
-
-                if (camera)
-                    mmal_component_disable (camera);
-
-
-                if ( encoder_pool ) {
-                    mmal_port_pool_destroy ( encoder->output[0], encoder_pool );
-                }
-                if ( encoder ) {
-                    mmal_component_destroy ( encoder );
-                    encoder = NULL;
-                }
-
-
-                //std::cout << API_NAME << ": end deleting camera.\n";
-            }
-
+            
             int initialize();
             int startCapture ( imageTakenCallback userCallback, unsigned char * preallocated_data, unsigned int offset, unsigned int length );
             void stopCapture();
