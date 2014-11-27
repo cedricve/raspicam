@@ -116,13 +116,14 @@ namespace raspicam {
                 camera_still_port = NULL;
                 encoder_input_port = NULL;
                 encoder_output_port = NULL;
-		_isInitialized=false;
+		       _isInitialized=false;
             }
 
             ~Private_Impl_Still()
             {
                 destroyCamera();
                 destroyEncoder();
+                mmal_connection_destroy(encoder_connection);
             }
 
             int initialize();
