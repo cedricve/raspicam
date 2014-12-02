@@ -74,7 +74,15 @@ namespace raspicam {
         }
     }
 
-    void RaspiCam_Still_Cv::release() {}
+    void RaspiCam_Still_Cv::release()
+    {
+
+    }
+
+    void RaspiCam_Still_Cv::commitParameters() 
+    {
+        _impl->commitParameters();
+    }
 
 
 
