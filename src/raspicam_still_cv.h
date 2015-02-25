@@ -72,8 +72,6 @@ namespace raspicam {
         */
         void release();
 
-        void commitParameters();
-
         /**
          * Grabs the next frame from video file or capturing device.
          */

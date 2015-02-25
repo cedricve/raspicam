@@ -1,3 +1,5 @@
+0.1.2
+  - Solved deadlock error in grab
 0.1.1
   - Moved to c++11  mutex  and condition_variables. Bug fixed that caused random dead lock condition in grab()
 0.1.0

@@ -39,8 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _Private_RaspiCam_STILL_IMPL_H
 #include "raspicamtypes.h"
 #include "mmal/mmal.h"
-#include "mmal/mmal_connection.h"
-#include <iostream>
+#include "mmal/util/mmal_connection.h"
 #include <string>
 #define MMAL_CAMERA_CAPTURE_PORT 2
 #define STILLS_FRAME_RATE_NUM 3
@@ -107,7 +106,6 @@ namespace raspicam {
 	    bool _isInitialized;
             public:
             const char * API_NAME;
-
             Private_Impl_Still() {
                 API_NAME = "Private_Impl_Still";
                 setDefaults();
@@ -118,11 +116,8 @@ namespace raspicam {
                 camera_still_port = NULL;
                 encoder_input_port = NULL;
                 encoder_output_port = NULL;
-		       _isInitialized=false;
+		_isInitialized=false;
             }
-
-            ~Private_Impl_Still();
-            
             int initialize();
             int startCapture ( imageTakenCallback userCallback, unsigned char * preallocated_data, unsigned int offset, unsigned int length );
             void stopCapture();

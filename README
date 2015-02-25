@@ -10,8 +10,6 @@ This library allows to use the Raspberry Pi Camera.
  - Many examples 
 
 * ChangeLog
-0.1.1
-  - Moved to c++11  mutex  and condition_variables. Bug fixed that caused random dead lock condition in grab()
 0.1.0
   - Bug fixed in release for RapiCam and RaspiCam_Cv
 0.0.7

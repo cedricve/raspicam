@@ -52,6 +52,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MMAL_ENCODING_VP6              MMAL_FOURCC('V','P','6',' ')
 #define MMAL_ENCODING_THEORA           MMAL_FOURCC('T','H','E','O')
 #define MMAL_ENCODING_SPARK            MMAL_FOURCC('S','P','R','K')
+#define MMAL_ENCODING_MJPEG            MMAL_FOURCC('M','J','P','G')
 
 #define MMAL_ENCODING_JPEG             MMAL_FOURCC('J','P','E','G')
 #define MMAL_ENCODING_GIF              MMAL_FOURCC('G','I','F',' ')
@@ -129,6 +130,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MMAL_ENCODING_WMA2             MMAL_FOURCC('W','M','A','2')
 #define MMAL_ENCODING_WMAP             MMAL_FOURCC('W','M','A','P')
 #define MMAL_ENCODING_WMAL             MMAL_FOURCC('W','M','A','L')
+#define MMAL_ENCODING_WMAV             MMAL_FOURCC('W','M','A','V')
 #define MMAL_ENCODING_AMRNB            MMAL_FOURCC('A','M','R','N')
 #define MMAL_ENCODING_AMRWB            MMAL_FOURCC('A','M','R','W')
 #define MMAL_ENCODING_AMRWBP           MMAL_FOURCC('A','M','R','P')

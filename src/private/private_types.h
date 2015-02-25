@@ -83,6 +83,8 @@ namespace raspicam {
             int hflip;                 /// 0 or 1
             int vflip;                 /// 0 or 1
             PARAM_FLOAT_RECT_T  roi;   /// region of interest to use on the sensor. Normalised [0,1] values in the rect
+            float awbg_red;//white balance red and blue
+            float awbg_blue;
         } ;
 
         //clean buffer

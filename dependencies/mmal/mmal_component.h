@@ -38,7 +38,6 @@ extern "C" {
  * (\ref MMAL_BUFFER_HEADER_T) */
 /* @{ */
 
-#include "mmal_default_components.h"
 #include "mmal_types.h"
 #include "mmal_port.h"
 
