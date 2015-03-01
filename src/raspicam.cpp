@@ -118,10 +118,6 @@ namespace raspicam {
     void RaspiCam::setAWB ( RASPICAM_AWB awb ) {
         _impl->setAWB ( awb );
     }
-    void RaspiCam::setAWB_RB ( float r,float b ){
-        _impl->setAWB_RB(r,b);
-    }
-
     void RaspiCam::setImageEffect ( RASPICAM_IMAGE_EFFECT imageEffect ) {
         _impl->setImageEffect ( imageEffect );
     }
@@ -149,9 +145,6 @@ namespace raspicam {
     int RaspiCam::getSaturation() const{return _impl->getSaturation() ;}
     RASPICAM_EXPOSURE RaspiCam::getExposure() const {return _impl->getExposure() ;}
     RASPICAM_AWB RaspiCam::getAWB() const{return _impl->getAWB() ;}
-    float RaspiCam::getAWBG_red()const{return _impl->getAWBG_red();}
-    float RaspiCam::getAWBG_blue()const{return _impl->getAWBG_blue();}
-
     RASPICAM_IMAGE_EFFECT RaspiCam::getImageEffect() const{return _impl->getImageEffect() ;};
     RASPICAM_METERING RaspiCam::getMetering() const{return _impl->getMetering() ;}
     bool RaspiCam::isHorizontallyFlipped() const {return _impl->isHorizontallyFlipped()  ;}

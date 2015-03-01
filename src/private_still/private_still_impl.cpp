@@ -38,9 +38,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <fstream>
 #include "private_still_impl.h"
 #include "mmal/mmal_buffer.h"
-#include "mmal/util/mmal_default_components.h"
-#include "mmal/util/mmal_util.h"
-#include "mmal/util/mmal_util_params.h"
+#include "mmal/mmal_default_components.h"
+#include "mmal/mmal_util.h"
+#include "mmal/mmal_util_params.h"
 #include <iostream>
 #include <semaphore.h>
 using namespace std;

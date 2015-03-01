@@ -31,8 +31,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mmal_common.h"
 #include "mmal_parameters_camera.h"
 #include "mmal_parameters_video.h"
-#include "mmal_parameters_audio.h"
-#include "mmal_parameters_clock.h"
 
 /** \defgroup MmalParameters List of pre-defined parameters
  * This defines a list of standard parameters. Components can define proprietary

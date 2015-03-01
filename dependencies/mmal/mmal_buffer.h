@@ -103,38 +103,31 @@ typedef struct MMAL_BUFFER_HEADER_T
  * The following flags describe properties of a buffer header */
 /* @{ */
 /** Signals that the current payload is the end of the stream of data */
-#define MMAL_BUFFER_HEADER_FLAG_EOS                    (1<<0)
+#define MMAL_BUFFER_HEADER_FLAG_EOS                    (1<<0) // 1
 /** Signals that the start of the current payload starts a frame */
-#define MMAL_BUFFER_HEADER_FLAG_FRAME_START            (1<<1)
+#define MMAL_BUFFER_HEADER_FLAG_FRAME_START            (1<<1) // 2
 /** Signals that the end of the current payload ends a frame */
-#define MMAL_BUFFER_HEADER_FLAG_FRAME_END              (1<<2)
+#define MMAL_BUFFER_HEADER_FLAG_FRAME_END              (1<<2) // 4
 /** Signals that the current payload contains only complete frames (1 or more) */
 #define MMAL_BUFFER_HEADER_FLAG_FRAME                  (MMAL_BUFFER_HEADER_FLAG_FRAME_START|MMAL_BUFFER_HEADER_FLAG_FRAME_END)
 /** Signals that the current payload is a keyframe (i.e. self decodable) */
-#define MMAL_BUFFER_HEADER_FLAG_KEYFRAME               (1<<3)
+#define MMAL_BUFFER_HEADER_FLAG_KEYFRAME               (1<<3) // 8
 /** Signals a discontinuity in the stream of data (e.g. after a seek).
  * Can be used for instance by a decoder to reset its state */
-#define MMAL_BUFFER_HEADER_FLAG_DISCONTINUITY          (1<<4)
+#define MMAL_BUFFER_HEADER_FLAG_DISCONTINUITY          (1<<4) // 16
 /** Signals a buffer containing some kind of config data for the component
  * (e.g. codec config data) */
-#define MMAL_BUFFER_HEADER_FLAG_CONFIG                 (1<<5)
+#define MMAL_BUFFER_HEADER_FLAG_CONFIG                 (1<<5) // 32
 /** Signals an encrypted payload */
-#define MMAL_BUFFER_HEADER_FLAG_ENCRYPTED              (1<<6)
+#define MMAL_BUFFER_HEADER_FLAG_ENCRYPTED              (1<<6) // 64
 /** Signals a buffer containing side information */
-#define MMAL_BUFFER_HEADER_FLAG_CODECSIDEINFO          (1<<7)
+#define MMAL_BUFFER_HEADER_FLAG_CODECSIDEINFO          (1<<7) // 128
 /** Signals a buffer which is the snapshot/postview image from a stills capture */
-#define MMAL_BUFFER_HEADER_FLAGS_SNAPSHOT              (1<<8)
+#define MMAL_BUFFER_HEADER_FLAGS_SNAPSHOT              (1<<8) // 256
 /** Signals a buffer which contains data known to be corrupted */
-#define MMAL_BUFFER_HEADER_FLAG_CORRUPTED              (1<<9)
+#define MMAL_BUFFER_HEADER_FLAG_CORRUPTED              (1<<9) // 512
 /** Signals that a buffer failed to be transmitted */
-#define MMAL_BUFFER_HEADER_FLAG_TRANSMISSION_FAILED    (1<<10)
-/** Signals the output buffer won't be used, just update reference frames */
-#define MMAL_BUFFER_HEADER_FLAG_DECODEONLY             (1<<11)
-/** User flags - can be passed in and will get returned */
-#define MMAL_BUFFER_HEADER_FLAG_USER0                  (1<<28)
-#define MMAL_BUFFER_HEADER_FLAG_USER1                  (1<<29)
-#define MMAL_BUFFER_HEADER_FLAG_USER2                  (1<<30)
-#define MMAL_BUFFER_HEADER_FLAG_USER3                  (1<<31)
+#define MMAL_BUFFER_HEADER_FLAG_TRANSMISSION_FAILED    (1<<10) // 1024
 /* @} */
 
 /** \name Video buffer header flags

@@ -77,10 +77,6 @@ void processCommandLine ( int argc,char **argv,raspicam::RaspiCam_Cv &Camera ) {
         doTestSpeedOnly=true;
     if ( findParam ( "-ss",argc,argv ) !=-1 )
         Camera.set ( CV_CAP_PROP_EXPOSURE, getParamVal ( "-ss",argc,argv )  );
-    if ( findParam ( "-wb_r",argc,argv ) !=-1 )
-        Camera.set ( CV_CAP_PROP_WHITE_BALANCE_RED_V,getParamVal ( "-wb_r",argc,argv )     );
-    if ( findParam ( "-wb_b",argc,argv ) !=-1 )
-        Camera.set ( CV_CAP_PROP_WHITE_BALANCE_BLUE_U,getParamVal ( "-wb_b",argc,argv )     );
 
 
 //     Camera.setSharpness ( getParamVal ( "-sh",argc,argv,0 ) );
@@ -98,11 +94,9 @@ void showUsage() {
     cout<<"[-w width] [-h height] \n[-br brightness_val(0,100)]\n";
     cout<<"[-co contrast_val (0 to 100)]\n[-sa saturation_val (0 to 100)]";
     cout<<"[-g gain_val  (0 to 100)]\n";
-    cout<<"[-ss shutter_speed (0 to 100) 0 auto]\n";
-    cout<<"[-wb_r val  (0 to 100),0 auto: white balance red component]\n";
-    cout<<"[-wb_b val  (0 to 100),0 auto: white balance blue component]\n";
-
+    cout<<"[-ss shutter_speed (0 to 100)]\n";
     cout<<endl;
+//      cout<<"[-ex    exposure_mode (
 }
 
 
@@ -136,11 +130,15 @@ int main ( int argc,char **argv ) {
         Camera.retrieve ( image );
         if ( !doTestSpeedOnly ) {
             if ( i%5==0 ) 	  cout<<"\r capturing ..."<<i<<"/"<<nCount<<std::flush;
-            if ( i%30==0 && i!=0 )
-                cv::imwrite ("image"+std::to_string(i)+".jpg",image );
+            if ( i%30==0 && i!=0 ) {
+                //save image
+                std::stringstream fn;
+                fn<<"image"<<i<<".ppm";
+                cv::imwrite ( fn.str(),image );
+            }
         }
     }
-    if ( !doTestSpeedOnly )  cout<<endl<<"Images saved in imagexx.jpg"<<endl;
+    if ( !doTestSpeedOnly )  cout<<endl<<"Images saved in imagexx.ppm"<<endl;
     double secondsElapsed= double ( cv::getTickCount()-time_ ) /double ( cv::getTickFrequency() ); //time in second
     cout<< secondsElapsed<<" seconds for "<< nCount<<"  frames : FPS = "<< ( float ) ( ( float ) ( nCount ) /secondsElapsed ) <<endl;
     Camera.release();

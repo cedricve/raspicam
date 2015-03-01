@@ -48,7 +48,9 @@ namespace raspicam {
         _isGrabbed=false;
 	_impl->setVerticalFlip(true);
     }
-    RaspiCam_Still_Cv::~RaspiCam_Still_Cv() {
+
+    RaspiCam_Still_Cv::~RaspiCam_Still_Cv()
+    {
         release();
         delete _impl;
     }
@@ -74,7 +76,12 @@ namespace raspicam {
         }
     }
 
-    void RaspiCam_Still_Cv::release() {}
+    void RaspiCam_Still_Cv::release()
+    {
+
+
+
+    }
 
 
 

@@ -53,9 +53,10 @@ namespace raspicam {
 //
 //
 ////////////////////////////////
-        void ThreadCondition::Wait(std::unique_lock<std::mutex>& lck) throw ( raspicam::Exception ) {
+        void ThreadCondition::Wait() throw ( raspicam::Exception ) {
             ready=false;
-             while ( !ready ) cv.wait ( lck );
+            std::unique_lock<std::mutex> lck ( mtx );
+            while ( !ready ) cv.wait ( lck );
         }
 
 ////////////////////////////////
@@ -63,6 +64,7 @@ namespace raspicam {
 //
 ////////////////////////////////
         void ThreadCondition::BroadCast() throw ( raspicam::Exception ) {
+            std::unique_lock<std::mutex> lck ( mtx );
             ready = true;
             cv.notify_all();
 

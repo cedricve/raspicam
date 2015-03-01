@@ -39,7 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _Private_RaspiCam_STILL_IMPL_H
 #include "raspicamtypes.h"
 #include "mmal/mmal.h"
-#include "mmal/util/mmal_connection.h"
+#include "mmal/mmal_connection.h"
 #include <string>
 #define MMAL_CAMERA_CAPTURE_PORT 2
 #define STILLS_FRAME_RATE_NUM 3
@@ -115,9 +115,11 @@ namespace raspicam {
                 encoder_pool = NULL;
                 camera_still_port = NULL;
                 encoder_input_port = NULL;
-                encoder_output_port = NULL;
-		_isInitialized=false;
+                    encoder_output_port = NULL;
+		          _isInitialized=false;
             }
+
+
             int initialize();
             int startCapture ( imageTakenCallback userCallback, unsigned char * preallocated_data, unsigned int offset, unsigned int length );
             void stopCapture();
@@ -161,6 +163,9 @@ namespace raspicam {
             bool isHorizontallyFlipped();
             bool isVerticallyFlipped();
 
+            /** Stops camera and free resources
+            */
+            void release();
 
             //Returns an id of the camera. We assume the camera id is the one of the raspberry
             //the id is obtained using raspberry serial number obtained in /proc/cpuinfo
