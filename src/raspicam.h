@@ -132,6 +132,8 @@ namespace raspicam {
         void setExposure ( RASPICAM_EXPOSURE exposure );
         void setShutterSpeed ( unsigned int ss );
         void setAWB ( RASPICAM_AWB awb );
+        // et specific values for whitebalance. Requires to set seAWB in OFF mode first
+        void setAWB_RB ( float r,float b );//range is 0-1.
         void setImageEffect ( RASPICAM_IMAGE_EFFECT imageEffect );
         void setMetering ( RASPICAM_METERING metering );
         void setHorizontalFlip ( bool hFlip );
@@ -150,6 +152,8 @@ namespace raspicam {
         unsigned int getShutterSpeed() const;
         RASPICAM_EXPOSURE getExposure() const ;
         RASPICAM_AWB getAWB() const;
+        float getAWBG_red()const;
+        float getAWBG_blue()const;
         RASPICAM_IMAGE_EFFECT getImageEffect() const ;
         RASPICAM_METERING getMetering() const;
         bool isHorizontallyFlipped() const ;

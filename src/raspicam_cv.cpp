@@ -115,7 +115,13 @@ namespace raspicam {
 	   break;
         case CV_CAP_PROP_CONVERT_RGB :
             return ( imgFormat==CV_8UC3 );
-//     case CV_CAP_PROP_WHITE_BALANCE :return _cam_impl->getAWB();
+        case CV_CAP_PROP_WHITE_BALANCE_RED_V:
+                    return _impl->getAWBG_red()*100;
+        break;
+
+        case CV_CAP_PROP_WHITE_BALANCE_BLUE_U:
+            return _impl->getAWBG_blue()*100;
+        break;
         default :
             return -1;
         };
@@ -135,18 +141,18 @@ namespace raspicam {
             _impl->setHeight ( value );
             break;
         case CV_CAP_PROP_FORMAT :{
-	  bool res=true;
+            bool res=true;
             if ( value==CV_8UC1  ){
-	      _impl->setFormat(RASPICAM_FORMAT_GRAY);
-	      imgFormat=value;	      
-	    }
-	      else if (value==CV_8UC3){
-		_impl->setFormat(RASPICAM_FORMAT_BGR);
-		imgFormat=value;
-	      }
+                _impl->setFormat(RASPICAM_FORMAT_GRAY);
+                imgFormat=value;
+            }
+            else if (value==CV_8UC3){
+                _impl->setFormat(RASPICAM_FORMAT_BGR);
+                imgFormat=value;
+            }
             else res=false;//error int format
-	    return res;		
-	}break;
+            return res;
+        }break;
         case CV_CAP_PROP_MODE ://nothing to  do yet
             return false;
             break;
@@ -174,6 +180,24 @@ namespace raspicam {
         case CV_CAP_PROP_CONVERT_RGB :
             imgFormat=CV_8UC3;
             break;
+        case CV_CAP_PROP_WHITE_BALANCE_RED_V:
+                if (value==0) _impl->setAWB(raspicam::RASPICAM_AWB_AUTO);
+                else  {
+                    int valblue=_impl->getAWBG_blue()*100;
+                     _impl->setAWB(raspicam::RASPICAM_AWB_OFF);
+                     _impl->setAWB_RB(value*100,valblue);
+                };
+        break;
+
+        case CV_CAP_PROP_WHITE_BALANCE_BLUE_U:
+                if (value==0) _impl->setAWB(raspicam::RASPICAM_AWB_AUTO);
+                else  {
+                    int valred=_impl->getAWBG_red()*100;
+                     _impl->setAWB(raspicam::RASPICAM_AWB_OFF);
+                     _impl->setAWB_RB(valred, value*100 );
+                };
+        break;
+
 //     case CV_CAP_PROP_WHITE_BALANCE :return _cam_impl->getAWB();
         default :
             return false;

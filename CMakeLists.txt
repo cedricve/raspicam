@@ -4,7 +4,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 PROJECT(raspicam)
-set(PROJECT_VERSION "0.1.0")
+set(PROJECT_VERSION "0.1.2")
 string(REGEX MATCHALL "[0-9]" PROJECT_VERSION_PARTS "${PROJECT_VERSION}")
 list(GET PROJECT_VERSION_PARTS 0 PROJECT_VERSION_MAJOR)
 list(GET PROJECT_VERSION_PARTS 1 PROJECT_VERSION_MINOR)
@@ -34,7 +34,7 @@ OPTION(BUILD_UTILS 	"Acitvates/Deactivates building utils  libraries" ON)
 #   Find Dependencies
 # ----------------------------------------------------------------------------
  #Add include to dependencies dir
-include_directories(${PROJECT_SOURCE_DIR}/dependencies)
+include_directories(${PROJECT_SOURCE_DIR}/dependencies ${PROJECT_SOURCE_DIR}/dependencies/mmal  ${PROJECT_SOURCE_DIR}/dependencies/vcos)
 #find the mmal libraries(I use conditional because I normally comile in pc)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES arm*) 
@@ -204,27 +204,7 @@ SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${EXTRA_EXE_LINKER_FLAGS}"
 SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} ${EXTRA_EXE_LINKER_FLAGS_RELEASE}")
 SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} ${EXTRA_EXE_LINKER_FLAGS_DEBUG}")
 
- 
-# ----------------------------------------------------------------------------
-#   PACKAGE GENERATOR (Not working yet, problems extracting dependencies)
-# ----------------------------------------------------------------------------
-SET(CPACK_GENERATOR "DEB" )
-INCLUDE(InstallRequiredSystemLibraries)
-SET(CPACK_PACKAGE_CONTACT "ava@uco.es")
-SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "rmsalinas@uco.es")
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "General Utilities Library")
-SET(CPACK_PACKAGE_VENDOR "AVA Group. University of Cordoba. Spain")
-SET(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
-SET(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
-SET(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
-SET(CPACK_STRIP_FILES "bin/lib${PROJECT_NAME}")
-SET(CPACK_SOURCE_STRIP_FILES "")
-IF (CPACK_GENERATOR STREQUAL "DEB")
-# Package indicates an incorrect size of the contents
-  SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-    SET(CPACK_DEBIAN_PACKAGE_DEPENDS "")
-ENDIF()
-INCLUDE(CPack)
+
 
 
 #------------------------------------------------

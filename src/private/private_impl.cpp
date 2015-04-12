@@ -38,8 +38,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "private_impl.h"
 #include <iostream>
 #include <cstdio>
-#include "mmal/mmal_util.h"
-#include "mmal/mmal_util_params.h"
+#include "mmal/util/mmal_util.h"
+#include "mmal/util/mmal_util_params.h"
+#include "mmal/util/mmal_default_components.h"
 using namespace std;
 namespace raspicam {
     namespace _private{
@@ -90,6 +91,8 @@ namespace raspicam {
             State.roi.x = State.roi.y = 0.0;
             State.roi.w = State.roi.h = 1.0;
             State.shutterSpeed=0;//auto
+            State.awbg_red=1.0;
+            State.awbg_blue=1.0;
 
         }
         bool  Private_Impl::open ( bool StartCapture ) {
@@ -175,11 +178,7 @@ namespace raspicam {
             if ( type!=RASPICAM_FORMAT_IGNORE ) {
                 cerr<<__FILE__<<":"<<__LINE__<<" :Private_Impl::retrieve type is not RASPICAM_FORMAT_IGNORE as it should be"<<endl;
             }
-            if ( State.captureFtm==RASPICAM_FORMAT_BGR ) {//need to swap channels
-                convertBGR2RGB ( callback_data._buffData.data,data,getImageTypeSize ( State.captureFtm ) );
-            } else
-
-                memcpy ( data,callback_data._buffData.data,getImageTypeSize ( State.captureFtm ) );
+            memcpy ( data,callback_data._buffData.data,getImageTypeSize ( State.captureFtm ) );
         }
 
 
@@ -274,8 +273,8 @@ namespace raspicam {
             format = video_port->format;
             format->encoding_variant =   convertFormat ( State.captureFtm );
             format->encoding = convertFormat ( State.captureFtm );
-            format->es->video.width = state->width;
-            format->es->video.height = state->height;
+            format->es->video.width = VCOS_ALIGN_UP(state->width, 32);
+            format->es->video.height = VCOS_ALIGN_UP(state->height, 16);
             format->es->video.crop.x = 0;
             format->es->video.crop.y = 0;
             format->es->video.crop.width = state->width;
@@ -448,11 +447,12 @@ namespace raspicam {
             } else           commitExposure();
             commitExposureCompensation();
             commitMetering();
-            commitAWB();
             commitImageEffect();
             commitRotation();
             commitFlips();
             commitVideoStabilization();
+            commitAWB();
+            commitAWB_RB();
 
         }
         void Private_Impl::commitVideoStabilization() {
@@ -468,7 +468,8 @@ namespace raspicam {
             PORT_USERDATA *pData = ( PORT_USERDATA * ) port->userdata;
 
             bool hasGrabbed=false;
-            pData->_mutex.lock();
+//            pData->_mutex.lock();
+             std::unique_lock<std::mutex> lck ( pData->_mutex );
             if ( pData ) {
                 if ( pData->wantToGrab &&  buffer->length ) {
                     mmal_buffer_header_mem_lock ( buffer );
@@ -479,8 +480,8 @@ namespace raspicam {
                     mmal_buffer_header_mem_unlock ( buffer );
                 }
             }
-            pData->_mutex.unlock();
-            if ( hasGrabbed ) pData->Thcond.BroadCast(); //wake up waiting client
+            //pData->_mutex.unlock();
+           // if ( hasGrabbed ) pData->Thcond.BroadCast(); //wake up waiting client
             // release buffer back to the pool
             mmal_buffer_header_release ( buffer );
             // and send one back to the port (if still open)
@@ -498,6 +499,7 @@ namespace raspicam {
 
             if ( pData->pstate->shutterSpeed!=0 )
                 mmal_port_parameter_set_uint32 ( pData->pstate->camera_component->control, MMAL_PARAMETER_SHUTTER_SPEED, pData->pstate->shutterSpeed ) ;
+            if ( hasGrabbed ) pData->Thcond.BroadCast(); //wake up waiting client
 
         }
 
@@ -579,7 +581,11 @@ namespace raspicam {
         }
 
 
-
+        void Private_Impl::setAWB_RB ( float red_g, float blue_g ) {
+            State.awbg_blue = blue_g;
+            State.awbg_red = red_g;
+            if ( isOpened() ) commitAWB_RB();
+        }
         void Private_Impl::setExposure ( RASPICAM_EXPOSURE exposure ) {
             State.rpc_exposureMode = exposure;
             if ( isOpened() ) commitExposure();
@@ -744,7 +750,7 @@ namespace raspicam {
             case RASPICAM_FORMAT_RGB:
                 return MMAL_ENCODING_BGR24;
             case RASPICAM_FORMAT_BGR:
-                return MMAL_ENCODING_BGR24;
+                return MMAL_ENCODING_RGB24;
             case RASPICAM_FORMAT_GRAY:
                 return MMAL_ENCODING_I420;
             case RASPICAM_FORMAT_YUV420:
@@ -793,7 +799,14 @@ namespace raspicam {
 
 
         }
-
+        void Private_Impl::commitAWB_RB() {
+           MMAL_PARAMETER_AWB_GAINS_T param = {{MMAL_PARAMETER_CUSTOM_AWB_GAINS,sizeof(param)}, {0,0}, {0,0}};
+           param.r_gain.num = (unsigned int)(State.awbg_red * 65536);
+           param.b_gain.num = (unsigned int)(State.awbg_blue * 65536);
+           param.r_gain.den = param.b_gain.den = 65536;
+           if ( mmal_port_parameter_set(State.camera_component->control, &param.hdr) != MMAL_SUCCESS )
+                cout << __func__ << ": Failed to set AWBG gains parameter.\n";
+        }
     };
 };
 

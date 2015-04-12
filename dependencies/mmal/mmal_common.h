@@ -36,14 +36,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <stddef.h>
 #include <assert.h>
-//#include "vcos.h"
-//standart types defined below (added  by RMS 2013/09/23)
-#include <stdint.h>
-//Use stdint instead and avoid duplicated declarations (eg when using opencv)
-// typedef unsigned long uint64_t;
-// typedef unsigned int uint32_t;
-// typedef unsigned char uint8_t;
-// typedef unsigned short uint16_t;
+
+#include <vcos.h>
 
 /* C99 64bits integers */
 #ifndef INT64_C

@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _Private_RaspiCam_IMPL_H
 #define _Private_RaspiCam_IMPL_H
 #include "mmal/mmal.h"
-#include "mmal/mmal_connection.h"
+//#include "mmal_connection.h"
 #include <mutex>
 #include <string>
 #include "raspicamtypes.h"
@@ -61,10 +61,13 @@ namespace raspicam {
                     pstate=0;
                 }
                 void waitForFrame() {
-                    _mutex.lock();
+                    //_mutex.lock();
+                    std::unique_lock<std::mutex> lck ( _mutex );
+
                     wantToGrab=true;
-                    _mutex.unlock();
-                    Thcond.Wait();
+//                    _mutex.unlock();
+//                    Thcond.Wait();
+                       Thcond.Wait(lck); //this will unlock the mutex and wait atomically
                 };
 
 
@@ -136,6 +139,8 @@ namespace raspicam {
             void setVideoStabilization ( bool v );
             void setExposureCompensation ( int val ); //-10,10
             void setAWB ( RASPICAM_AWB awb );
+            void setAWB_RB ( float red,float blue );//ranges [0,1]
+
             void setImageEffect ( RASPICAM_IMAGE_EFFECT imageEffect );
             void setMetering ( RASPICAM_METERING metering );
             void setHorizontalFlip ( bool hFlip );
@@ -192,6 +197,11 @@ namespace raspicam {
             {
                 return State.rpc_awbMode;
             }
+
+            float getAWBG_red(){return State.awbg_red;}
+
+            float getAWBG_blue(){return State.awbg_blue;}
+
             RASPICAM_IMAGE_EFFECT getImageEffect() const
             {
                 return State.rpc_imageEffect;
@@ -241,7 +251,7 @@ namespace raspicam {
             void commitExposureCompensation();
             void commitVideoStabilization();
             void commitShutterSpeed();
-
+            void commitAWB_RB();
 
             MMAL_PARAM_EXPOSUREMODE_T convertExposure ( RASPICAM_EXPOSURE exposure ) ;
             MMAL_PARAM_AWBMODE_T  convertAWB ( RASPICAM_AWB awb ) ;
