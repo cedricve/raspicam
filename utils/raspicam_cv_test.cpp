@@ -77,10 +77,6 @@ void processCommandLine ( int argc,char **argv,raspicam::RaspiCam_Cv &Camera ) {
         doTestSpeedOnly=true;
     if ( findParam ( "-ss",argc,argv ) !=-1 )
         Camera.set ( CV_CAP_PROP_EXPOSURE, getParamVal ( "-ss",argc,argv )  );
-    if ( findParam ( "-wb_r",argc,argv ) !=-1 )
-        Camera.set ( CV_CAP_PROP_WHITE_BALANCE_RED_V,getParamVal ( "-wb_r",argc,argv )     );
-    if ( findParam ( "-wb_b",argc,argv ) !=-1 )
-        Camera.set ( CV_CAP_PROP_WHITE_BALANCE_BLUE_U,getParamVal ( "-wb_b",argc,argv )     );
 
 
 //     Camera.setSharpness ( getParamVal ( "-sh",argc,argv,0 ) );
@@ -99,8 +95,6 @@ void showUsage() {
     cout<<"[-co contrast_val (0 to 100)]\n[-sa saturation_val (0 to 100)]";
     cout<<"[-g gain_val  (0 to 100)]\n";
     cout<<"[-ss shutter_speed (0 to 100) 0 auto]\n";
-    cout<<"[-wb_r val  (0 to 100),0 auto: white balance red component]\n";
-    cout<<"[-wb_b val  (0 to 100),0 auto: white balance blue component]\n";
 
     cout<<endl;
 }
