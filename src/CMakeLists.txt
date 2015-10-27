@@ -30,7 +30,7 @@ IF (${OpenCV_FOUND})
 message(STATUS "Adding cv library")
 SET(hdrs_cv raspicam_cv.h raspicam_still_cv.h)
 SET(srcs_cv raspicam_cv.cpp raspicam_still_cv.cpp)
-ADD_LIBRARY(${PROJECT_NAME}_cv ${hdrs_cv} ${srcs_cv} )
+ADD_LIBRARY(${PROJECT_NAME}_cv ${hdrs_cv} ${srcs_cv} ${srcs_base})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES 				# create *nix style library versions + symbolic links
 	DEFINE_SYMBOL DSO_EXPORTS
 	VERSION ${PROJECT_VERSION}
