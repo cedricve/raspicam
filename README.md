@@ -65,7 +65,8 @@ If OpenCV development files are installed in your system, then you see following
 	-- CREATE OPENCV MODULE=1
 	
  
-Finally compile, install and update the ldconfig
+Finally compile, install and update the ldconfig:
+
 	make
 	sudo make install
 	sudo ldconfig
