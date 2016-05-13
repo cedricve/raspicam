@@ -107,6 +107,7 @@ namespace raspicam {
             callback_data.pstate = &State;
             // assign data to use for callback
             camera_video_port->userdata = ( struct MMAL_PORT_USERDATA_T * ) &callback_data;
+            State.camera_component->control->userdata = ( struct MMAL_PORT_USERDATA_T * ) &callback_data;
 
             _isOpened=true;
             if ( StartCapture ) return startCapture();
@@ -267,6 +268,28 @@ namespace raspicam {
             cam_config.fast_preview_resume = 0;
             cam_config.use_stc_timestamp = MMAL_PARAM_TIMESTAMP_MODE_RESET_STC;
             mmal_port_parameter_set ( camera->control, &cam_config.hdr );
+
+            MMAL_PARAMETER_CHANGE_EVENT_REQUEST_T change_event_request =
+                    {{MMAL_PARAMETER_CHANGE_EVENT_REQUEST, sizeof(MMAL_PARAMETER_CHANGE_EVENT_REQUEST_T)},
+                     MMAL_PARAMETER_CAMERA_SETTINGS, 1};
+
+            status = mmal_port_parameter_set(camera->control, &change_event_request.hdr);
+            if ( status != MMAL_SUCCESS )
+            {
+                cerr<<("No camera settings events");
+                mmal_component_destroy ( camera );
+                return 0;
+            }
+
+            // Enable the camera, and tell it its control callback function
+            status = mmal_port_enable(camera->control, camera_control_callback);
+
+            if (status != MMAL_SUCCESS)
+            {
+                cerr << "Unable to enable control port : error " << (int) status;
+                mmal_component_destroy ( camera );
+                return 0;
+            }
 
             // Set the encode format on the video  port
 
@@ -461,7 +484,31 @@ namespace raspicam {
                 cout << __func__ << ": Failed to set video stabilization parameter.\n";
         }
 
+        void Private_Impl::camera_control_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer)
+        {
+            PORT_USERDATA *pData = ( PORT_USERDATA * ) port->userdata;
+            std::unique_lock<std::mutex> lck ( pData->_mutex );
 
+            if (buffer->cmd == MMAL_EVENT_PARAMETER_CHANGED)
+            {
+                MMAL_EVENT_PARAMETER_CHANGED_T *param = (MMAL_EVENT_PARAMETER_CHANGED_T *)buffer->data;
+                if (param->hdr.id == MMAL_PARAMETER_CAMERA_SETTINGS) {
+                    MMAL_PARAMETER_CAMERA_SETTINGS_T *settings = (MMAL_PARAMETER_CAMERA_SETTINGS_T*)param;
+
+                    pData->pstate->shutterSpeed = settings->exposure;
+                    pData->pstate->awbg_red = float(settings->awb_red_gain.num)/settings->awb_red_gain.den;
+                    pData->pstate->awbg_blue = float(settings->awb_blue_gain.num)/settings->awb_blue_gain.den;
+                }
+            }
+            else if (buffer->cmd == MMAL_EVENT_ERROR)
+            {
+                printf("No data received from sensor. Check all connections, including the Sunny one on the camera board");
+            }
+            else
+                printf("Received unexpected camera control callback event, 0x%08x", buffer->cmd);
+
+            mmal_buffer_header_release(buffer);
+        }
 
         void Private_Impl::video_buffer_callback ( MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer ) {
             MMAL_BUFFER_HEADER_T *new_buffer;
@@ -497,7 +544,7 @@ namespace raspicam {
                     printf ( "Unable to return a buffer to the encoder port" );
             }
 
-            if ( pData->pstate->shutterSpeed!=0 )
+            if ( pData->pstate->shutterSpeed!=0 && pData->pstate->rpc_exposureMode == RASPICAM_EXPOSURE_FIXEDFPS)
                 mmal_port_parameter_set_uint32 ( pData->pstate->camera_component->control, MMAL_PARAMETER_SHUTTER_SPEED, pData->pstate->shutterSpeed ) ;
             if ( hasGrabbed ) pData->Thcond.BroadCast(); //wake up waiting client
 
