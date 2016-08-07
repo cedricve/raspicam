@@ -138,6 +138,7 @@ namespace raspicam {
         void setMetering ( RASPICAM_METERING metering );
         void setHorizontalFlip ( bool hFlip );
         void setVerticalFlip ( bool vFlip );
+        void setFrameRate ( int frames_per_second );
 
         //Accessors
         RASPICAM_FORMAT getFormat() const;
@@ -156,6 +157,7 @@ namespace raspicam {
         float getAWBG_blue()const;
         RASPICAM_IMAGE_EFFECT getImageEffect() const ;
         RASPICAM_METERING getMetering() const;
+        int getFrameRate() const;
         bool isHorizontallyFlipped() const ;
         bool isVerticallyFlipped() const ;
 
