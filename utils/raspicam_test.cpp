@@ -122,7 +122,7 @@ void processCommandLine ( int argc,char **argv,raspicam::RaspiCam &Camera ) {
         Camera.setAWB( getAwbFromString ( argv[idx+1] ) );
     nFramesCaptured=getParamVal("-nframes",argc,argv,100);
     Camera.setAWB_RB(getParamVal("-awb_b",argc,argv ,1), getParamVal("-awb_g",argc,argv ,1));
-
+    Camera.setFrameRate(getParamVal("-fps",argc,argv, 0));
 }
 void showUsage() {
     cout<<"Usage: "<<endl;
@@ -139,6 +139,7 @@ void showUsage() {
     cout<<"[-nframes val: number of frames captured (100 default). 0 == Infinite lopp]\n";
     cout<<"[-awb_r val:(0,8):set the value for the red component of white balance]"<<endl;
     cout<<"[-awb_g val:(0,8):set the value for the green component of white balance]"<<endl;
+    cout<<"[-fps frame_rate (0 to 120) 0 auto]\n";
 
     cout<<endl;
 }

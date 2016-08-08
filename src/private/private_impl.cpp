@@ -669,6 +669,9 @@ namespace raspicam {
             if ( isOpened() ) commitFlips();
         }
 
+        void Private_Impl::setFrameRate ( int frames_per_second ) {
+            State.framerate = frames_per_second;
+        }
 
         MMAL_PARAM_EXPOSUREMETERINGMODE_T Private_Impl::convertMetering ( RASPICAM_METERING metering ) {
             switch ( metering ) {

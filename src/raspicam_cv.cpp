@@ -94,7 +94,7 @@ namespace raspicam {
         case CV_CAP_PROP_FRAME_HEIGHT :
             return _impl->getHeight();
         case CV_CAP_PROP_FPS:
-            return 30;
+            return _impl->getFrameRate();
         case CV_CAP_PROP_FORMAT :
             return imgFormat;
         case CV_CAP_PROP_MODE :
@@ -171,6 +171,8 @@ namespace raspicam {
         case CV_CAP_PROP_CONVERT_RGB :
             imgFormat=CV_8UC3;
             break;
+        case CV_CAP_PROP_FPS:
+            _impl->setFrameRate ( value );
         default :
             return false;
         };

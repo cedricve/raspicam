@@ -71,6 +71,7 @@ void processCommandLine ( int argc,char **argv,raspicam::RaspiCam_Cv &Camera ) {
     Camera.set ( CV_CAP_PROP_CONTRAST ,getParamVal ( "-co",argc,argv,50 ) );
     Camera.set ( CV_CAP_PROP_SATURATION, getParamVal ( "-sa",argc,argv,50 ) );
     Camera.set ( CV_CAP_PROP_GAIN, getParamVal ( "-g",argc,argv ,50 ) );
+    Camera.set ( CV_CAP_PROP_FPS, getParamVal ( "-fps",argc,argv, 0 ) );
     if ( findParam ( "-gr",argc,argv ) !=-1 )
         Camera.set ( CV_CAP_PROP_FORMAT, CV_8UC1 );
     if ( findParam ( "-test_speed",argc,argv ) !=-1 )
@@ -95,6 +96,8 @@ void showUsage() {
     cout<<"[-co contrast_val (0 to 100)]\n[-sa saturation_val (0 to 100)]";
     cout<<"[-g gain_val  (0 to 100)]\n";
     cout<<"[-ss shutter_speed (0 to 100) 0 auto]\n";
+    cout<<"[-fps frame_rate (0 to 120) 0 auto]\n";
+    cout<<"[-nframes val: number of frames captured (100 default). 0 == Infinite lopp]\n";
 
     cout<<endl;
 }
@@ -120,12 +123,12 @@ int main ( int argc,char **argv ) {
     cout<<"Connected to camera ="<<Camera.getId() <<endl;
 
     cv::Mat image;
-    int nCount=100;
+    int nCount=getParamVal ( "-nframes",argc,argv, 100 );
     cout<<"Capturing"<<endl;
 
     double time_=cv::getTickCount();
 
-    for ( int i=0; i<nCount; i++ ) {
+    for ( int i=0; i<nCount || nCount==0; i++ ) {
         Camera.grab();
         Camera.retrieve ( image );
         if ( !doTestSpeedOnly ) {
