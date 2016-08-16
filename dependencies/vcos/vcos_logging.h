@@ -294,7 +294,7 @@ void vcos_log_dump_mem_impl( const VCOS_LOG_CAT_T *cat,
 
 #if VCOS_HAVE_CMD
 
-#include "interface/vcos/vcos_cmd.h"
+#include "vcos_cmd.h"
 
 /*
  * These are the log sub-commands. They're exported here for user-mode apps which 
