@@ -37,7 +37,7 @@ extern "C" {
 #endif
 
 #include "vcos_types.h"
-#include "pthreads/vcos_platform.h"
+#include "vcos.h"
 
 
 /** Create a new thread local storage data key visible to all threads in

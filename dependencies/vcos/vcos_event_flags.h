@@ -38,7 +38,7 @@ extern "C" {
 #endif
 
 #include "vcos_types.h"
-#include "pthreads/vcos_platform.h"
+#include "vcos.h"
 
 #define VCOS_EVENT_FLAGS_SUSPEND    VCOS_SUSPEND
 #define VCOS_EVENT_FLAGS_NO_SUSPEND VCOS_NO_SUSPEND

@@ -31,7 +31,7 @@ VideoCore OS Abstraction Layer - initialization routines
 
 
 #include "vcos_types.h"
-#include "pthreads/vcos_platform.h"
+#include "vcos.h"
 
 #ifdef __cplusplus
 extern "C" {

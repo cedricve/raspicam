@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "vcos/vcos.h"
 #include "mmal_types.h"
 #include "mmal_common.h"
-#include <cassert>
+
 /** \defgroup MmalClock Clock Framework
  * The MMAL clock framework provides scheduling facilities to the rest of
  * MMAL.
@@ -195,7 +195,7 @@ typedef struct MMAL_CLOCK_EVENT_T
 } MMAL_CLOCK_EVENT_T;
 
 /* Make sure MMAL_CLOCK_EVENT_T will preserve 64-bit alignment */
-static_assert(!(sizeof(MMAL_CLOCK_EVENT_T) & 0x7),"mmal error");
+vcos_static_assert(!(sizeof(MMAL_CLOCK_EVENT_T) & 0x7));
 
 #define MMAL_CLOCK_EVENT_INIT(id) { id, MMAL_CLOCK_EVENT_MAGIC, NULL, 0, {0}, 0 }
 

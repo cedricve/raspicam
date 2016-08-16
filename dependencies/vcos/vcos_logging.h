@@ -39,7 +39,7 @@ extern "C" {
 #include <stdarg.h>
 
 #include "vcos_types.h"
-#include "pthreads/vcos_platform.h"
+#include "vcos.h"
 #include "vcos_logging_control.h"
 
 /**
@@ -66,7 +66,7 @@ extern "C" {
  *
  *     #define VCOS_LOG_CATEGORY (&my_category)
  *
- *     #include <vcos.h>
+ *     #include <interface/vcos/vcos.h>
  *
  *     VCOS_LOG_CAT_T my_category;
  *
@@ -294,7 +294,7 @@ void vcos_log_dump_mem_impl( const VCOS_LOG_CAT_T *cat,
 
 #if VCOS_HAVE_CMD
 
-#include "vcos_cmd.h"
+#include "interface/vcos/vcos_cmd.h"
 
 /*
  * These are the log sub-commands. They're exported here for user-mode apps which 

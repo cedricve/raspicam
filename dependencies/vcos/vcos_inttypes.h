@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Attempt to provide the support for fixed width integer types as per
  * inttypes.h. This simply includes inttypes.h, which should find the
  * system/toolchain version if present, otherwise falling back to the version
- * in <platform>. The vcos versions initially only provide the
+ * in interface/vcos/<platform>. The vcos versions initially only provide the
  * most common printf() macros.
  */
 

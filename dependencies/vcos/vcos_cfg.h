@@ -33,7 +33,7 @@ extern "C" {
 #endif
 
 #include "vcos_types.h"
-#include "pthreads/vcos_platform.h"
+#include "vcos.h"
 
 typedef struct opaque_vcos_cfg_buf_t    *VCOS_CFG_BUF_T;
 typedef struct opaque_vcos_cfg_entry_t  *VCOS_CFG_ENTRY_T;

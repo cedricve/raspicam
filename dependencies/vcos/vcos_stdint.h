@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Except for use with lcc, this simply includes stdint.h, which should find
  * the system/toolchain version if present, otherwise falling back to the
- * version in <platform>.
+ * version in interface/vcos/<platform>.
  */
 
 #ifdef __cplusplus

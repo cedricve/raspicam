@@ -82,6 +82,10 @@ OMX_U32 mmalil_buffer_flags_to_omx(uint32_t flags)
       omx_flags |= OMX_BUFFERFLAG_DATACORRUPT;
    if (flags & MMAL_BUFFER_HEADER_FLAG_DECODEONLY)
       omx_flags |= OMX_BUFFERFLAG_DECODEONLY;
+   if (flags & MMAL_BUFFER_HEADER_VIDEO_FLAG_INTERLACED)
+      omx_flags |= OMX_BUFFERFLAG_INTERLACED;
+   if (flags & MMAL_BUFFER_HEADER_VIDEO_FLAG_TOP_FIELD_FIRST)
+     omx_flags |= OMX_BUFFERFLAG_TOP_FIELD_FIRST;
    if (flags & MMAL_BUFFER_HEADER_FLAG_USER0)
       omx_flags |= 1<<28;
    if (flags & MMAL_BUFFER_HEADER_FLAG_USER1)
@@ -116,6 +120,10 @@ uint32_t mmalil_buffer_flags_to_mmal(OMX_U32 flags)
       mmal_flags |= MMAL_BUFFER_HEADER_FLAG_CORRUPTED;
    if (flags & OMX_BUFFERFLAG_DECODEONLY)
       mmal_flags |= MMAL_BUFFER_HEADER_FLAG_DECODEONLY;
+   if (flags & OMX_BUFFERFLAG_INTERLACED)
+      mmal_flags |= MMAL_BUFFER_HEADER_VIDEO_FLAG_INTERLACED;
+   if (flags & OMX_BUFFERFLAG_TOP_FIELD_FIRST)
+      mmal_flags |= MMAL_BUFFER_HEADER_VIDEO_FLAG_TOP_FIELD_FIRST;
    if (flags & 1<<28)
       mmal_flags |= MMAL_BUFFER_HEADER_FLAG_USER0;
    if (flags & 1<<29)
@@ -139,8 +147,16 @@ void mmalil_buffer_header_to_omx(OMX_BUFFERHEADERTYPE *omx, MMAL_BUFFER_HEADER_T
    omx->nTimeStamp = omx_ticks_from_s64(mmal->pts);
    if (mmal->pts == MMAL_TIME_UNKNOWN)
    {
-      omx->nFlags |= OMX_BUFFERFLAG_TIME_UNKNOWN;
-      omx->nTimeStamp = omx_ticks_from_s64(0);
+      if (mmal->dts == MMAL_TIME_UNKNOWN)
+      {
+         omx->nTimeStamp = omx_ticks_from_s64(0);
+         omx->nFlags |= OMX_BUFFERFLAG_TIME_UNKNOWN;
+      }
+      else
+      {
+        omx->nTimeStamp = omx_ticks_from_s64(mmal->dts);
+        omx->nFlags |= OMX_BUFFERFLAG_TIME_IS_DTS;
+      }
    }
 }
 
@@ -151,10 +167,21 @@ void mmalil_buffer_header_to_mmal(MMAL_BUFFER_HEADER_T *mmal, OMX_BUFFERHEADERTY
    mmal->alloc_size = omx->nAllocLen;
    mmal->length = omx->nFilledLen;
    mmal->offset = omx->nOffset;
-   mmal->pts = omx_ticks_to_s64(omx->nTimeStamp);
-   if (omx->nFlags & OMX_BUFFERFLAG_TIME_UNKNOWN)
-      mmal->pts = MMAL_TIME_UNKNOWN;
-   mmal->dts = MMAL_TIME_UNKNOWN;
+   if (omx->nFlags & OMX_BUFFERFLAG_TIME_IS_DTS)
+   {
+     mmal->dts = omx_ticks_to_s64(omx->nTimeStamp);
+     mmal->pts = MMAL_TIME_UNKNOWN;
+   }
+   else if (omx->nFlags & OMX_BUFFERFLAG_TIME_UNKNOWN)
+   {
+     mmal->dts = MMAL_TIME_UNKNOWN;
+     mmal->pts = MMAL_TIME_UNKNOWN;
+   }
+   else
+   {
+     mmal->dts = MMAL_TIME_UNKNOWN;
+     mmal->pts = omx_ticks_to_s64(omx->nTimeStamp);
+   }
    mmal->flags = mmalil_buffer_flags_to_mmal(omx->nFlags);
 }
 
@@ -304,7 +331,7 @@ MMAL_STATUS_T mmalil_omx_default_channel_mapping(OMX_AUDIO_CHANNELTYPE *channel_
          OMX_AUDIO_ChannelLS, OMX_AUDIO_ChannelRS}
    };
 
-   if (!nchannels || nchannels + 1 >= MMAL_COUNTOF(default_mapping))
+   if (!nchannels || nchannels >= MMAL_COUNTOF(default_mapping))
       return MMAL_EINVAL;
 
    memcpy(channel_mapping, default_mapping[nchannels],
@@ -585,6 +612,7 @@ static struct {
 } mmal_omx_video_coding_table[] =
 {
    {MMAL_ENCODING_H264,           OMX_VIDEO_CodingAVC},
+   {MMAL_ENCODING_MVC,            OMX_VIDEO_CodingMVC},
    {MMAL_ENCODING_MP4V,           OMX_VIDEO_CodingMPEG4},
    {MMAL_ENCODING_MP2V,           OMX_VIDEO_CodingMPEG2},
    {MMAL_ENCODING_MP1V,           OMX_VIDEO_CodingMPEG2},
@@ -689,6 +717,11 @@ static struct {
    {MMAL_ENCODING_ARGB,           OMX_COLOR_Format32bitBGRA8888},
    {MMAL_ENCODING_RGBA,           OMX_COLOR_Format32bitABGR8888},
    {MMAL_ENCODING_EGL_IMAGE,      OMX_COLOR_FormatBRCMEGL},
+   {MMAL_ENCODING_BAYER_SBGGR8,   OMX_COLOR_FormatRawBayer8bit},
+   {MMAL_ENCODING_BAYER_SBGGR10P, OMX_COLOR_FormatRawBayer10bit},
+   {MMAL_ENCODING_BAYER_SBGGR12P, OMX_COLOR_FormatRawBayer12bit},
+   {MMAL_ENCODING_BAYER_SBGGR16,  OMX_COLOR_FormatRawBayer16bit},
+   {MMAL_ENCODING_BAYER_SBGGR10DPCM8,OMX_COLOR_FormatRawBayer8bitcompressed},
    {MMAL_ENCODING_OPAQUE,         OMX_COLOR_FormatBRCMOpaque},
    {MMAL_ENCODING_UNKNOWN,        OMX_COLOR_FormatUnused}
 };
