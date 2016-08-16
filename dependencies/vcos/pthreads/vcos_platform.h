@@ -564,7 +564,10 @@ VCOS_STATUS_T vcos_event_create(VCOS_EVENT_T *event, const char *debug_name)
 VCOS_INLINE_IMPL
 void vcos_event_signal(VCOS_EVENT_T *event)
 {
-   int ok = 0;
+   #if VCOS_ASSERT_ENABLED
+      int ok = 0;
+   #endif
+
    int value;
 
    if (vcos_mutex_lock(&event->mutex) != VCOS_SUCCESS)
@@ -577,7 +580,10 @@ void vcos_event_signal(VCOS_EVENT_T *event)
       if (sem_post(&event->sem) != 0)
          goto fail_sem;
 
-   ok = 1;
+   #if VCOS_ASSERT_ENABLED
+    ok = 1;
+    #endif
+    
 fail_sem:
    vcos_mutex_unlock(&event->mutex);
 fail_mtx:
