@@ -60,6 +60,7 @@ namespace raspicam {
         } RASPICAM_USERDATA;
 
         static void control_callback ( MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer ) {
+            (void)port;
             if ( buffer->cmd == MMAL_EVENT_PARAMETER_CHANGED ) {
             } else {
                 // Unexpected control callback event!
@@ -169,7 +170,7 @@ namespace raspicam {
             if ( mmal_port_parameter_set ( camera->control, &colfx.hdr ) != MMAL_SUCCESS )
                 cout << API_NAME << ": Failed to set color effects parameter.\n";
             // Set ROI
-            MMAL_PARAMETER_INPUT_CROP_T crop = {{MMAL_PARAMETER_INPUT_CROP, sizeof ( MMAL_PARAMETER_INPUT_CROP_T ) }};
+            MMAL_PARAMETER_INPUT_CROP_T crop = {{MMAL_PARAMETER_INPUT_CROP, sizeof ( MMAL_PARAMETER_INPUT_CROP_T ) },{0,0,0,0}};
             crop.rect.x = ( 65536 * 0 );
             crop.rect.y = ( 65536 * 0 );
             crop.rect.width = ( 65536 * 1 );
@@ -399,6 +400,7 @@ namespace raspicam {
             userdata->imageCallback = userCallback;
             encoder_output_port->userdata = ( struct MMAL_PORT_USERDATA_T * ) userdata;
             startCapture();
+            return 0;
         }
 
         int Private_Impl_Still::startCapture() {
@@ -602,7 +604,7 @@ namespace raspicam {
 
         void Private_Impl_Still::commitBrightness() {
             mmal_port_parameter_set_rational ( camera->control, MMAL_PARAMETER_BRIGHTNESS, ( MMAL_RATIONAL_T ) {
-                brightness, 100
+                (int32_t)brightness, 100
             } );
         }
 
@@ -776,6 +778,7 @@ namespace raspicam {
 
         MMAL_PARAM_IMAGEFX_T Private_Impl_Still::convertImageEffect ( RASPICAM_IMAGE_EFFECT imageEffect ) {
             switch ( imageEffect ) {
+            default:
             case RASPICAM_IMAGE_EFFECT_NONE:
                 return MMAL_PARAM_IMAGEFX_NONE;
             case RASPICAM_IMAGE_EFFECT_NEGATIVE:

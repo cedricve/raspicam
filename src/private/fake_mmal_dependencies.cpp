@@ -3,11 +3,14 @@
 #include "mmal/util/mmal_util_params.h"
 #include "mmal/mmal.h"
 #include "mmal/util/mmal_connection.h"
- MMAL_BUFFER_HEADER_T *mmal_queue_get(MMAL_QUEUE_T *queue){}
-MMAL_STATUS_T mmal_buffer_header_mem_lock(MMAL_BUFFER_HEADER_T *header){}
 
-void mmal_buffer_header_mem_unlock(MMAL_BUFFER_HEADER_T *header){}
- void mmal_port_pool_destroy(MMAL_PORT_T *port, MMAL_POOL_T *pool){}
+#define UNUSED(x) ((void)x)
+
+ MMAL_BUFFER_HEADER_T *mmal_queue_get(MMAL_QUEUE_T *queue){UNUSED(queue); return NULL;}
+MMAL_STATUS_T mmal_buffer_header_mem_lock(MMAL_BUFFER_HEADER_T *header){UNUSED(header); return MMAL_SUCCESS;}
+
+void mmal_buffer_header_mem_unlock(MMAL_BUFFER_HEADER_T *header){UNUSED(header);}
+ void mmal_port_pool_destroy(MMAL_PORT_T *port, MMAL_POOL_T *pool){UNUSED(port);UNUSED(pool);}
 
 /** Create an instance of a component.
  * The newly created component will expose ports to the client. All the exposed ports are
@@ -20,7 +23,7 @@ void mmal_buffer_header_mem_unlock(MMAL_BUFFER_HEADER_T *header){}
  * @return MMAL_SUCCESS on success
  */
 MMAL_STATUS_T mmal_component_create(const char *name,
-                                    MMAL_COMPONENT_T **component){}
+                                    MMAL_COMPONENT_T **component){UNUSED(name);UNUSED(component);return MMAL_SUCCESS;}
 
 /** Acquire a reference on a component.
  * Acquiring a reference on a component will prevent a component from being destroyed until
@@ -30,7 +33,7 @@ MMAL_STATUS_T mmal_component_create(const char *name,
  *
  * @param component component to acquire
  */
-void mmal_component_acquire(MMAL_COMPONENT_T *component){}
+void mmal_component_acquire(MMAL_COMPONENT_T *component){UNUSED(component);}
 
 /** Release a reference on a component
  * Release an acquired reference on a component. Triggers the destruction of the component when
@@ -41,7 +44,7 @@ void mmal_component_acquire(MMAL_COMPONENT_T *component){}
  * @param component component to release
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_component_release(MMAL_COMPONENT_T *component){}
+MMAL_STATUS_T mmal_component_release(MMAL_COMPONENT_T *component){UNUSED(component);return MMAL_SUCCESS;}
 
 /** Destroy a previously created component
  * Release an acquired reference on a component. Only actually destroys the component when
@@ -50,19 +53,19 @@ MMAL_STATUS_T mmal_component_release(MMAL_COMPONENT_T *component){}
  * @param component component to destroy
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_component_destroy(MMAL_COMPONENT_T *component){}
+MMAL_STATUS_T mmal_component_destroy(MMAL_COMPONENT_T *component){UNUSED(component);return MMAL_SUCCESS;}
 
 /** Enable processing on a component
  * @param component component to enable
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_component_enable(MMAL_COMPONENT_T *component){}
+MMAL_STATUS_T mmal_component_enable(MMAL_COMPONENT_T *component){UNUSED(component);return MMAL_SUCCESS;}
 
 /** Disable processing on a component
  * @param component component to disable
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_component_disable(MMAL_COMPONENT_T *component){}
+MMAL_STATUS_T mmal_component_disable(MMAL_COMPONENT_T *component){UNUSED(component);return MMAL_SUCCESS;}
 
 
 
@@ -72,7 +75,7 @@ MMAL_STATUS_T mmal_component_disable(MMAL_COMPONENT_T *component){}
  * @param port The port for which format changes are to be committed.
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_port_format_commit(MMAL_PORT_T *port){}
+MMAL_STATUS_T mmal_port_format_commit(MMAL_PORT_T *port){UNUSED(port);return MMAL_SUCCESS;}
 
 
 /** Enable processing on a port
@@ -93,7 +96,7 @@ MMAL_STATUS_T mmal_port_format_commit(MMAL_PORT_T *port){}
  * @param cb callback use by the port to send a \ref MMAL_BUFFER_HEADER_T back
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_port_enable(MMAL_PORT_T *port, MMAL_PORT_BH_CB_T cb){}
+MMAL_STATUS_T mmal_port_enable(MMAL_PORT_T *port, MMAL_PORT_BH_CB_T cb){UNUSED(port);UNUSED(cb);return MMAL_SUCCESS;}
 
 /** Disable processing on a port
  *
@@ -106,7 +109,7 @@ MMAL_STATUS_T mmal_port_enable(MMAL_PORT_T *port, MMAL_PORT_BH_CB_T cb){}
  * @param port port to disable
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_port_disable(MMAL_PORT_T *port){}
+MMAL_STATUS_T mmal_port_disable(MMAL_PORT_T *port){UNUSED(port);return MMAL_SUCCESS;}
 
 /** Ask a port to release all the buffer headers it currently has.
  *
@@ -123,7 +126,7 @@ MMAL_STATUS_T mmal_port_disable(MMAL_PORT_T *port){}
  * @param port The port to flush.
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_port_flush(MMAL_PORT_T *port){}
+MMAL_STATUS_T mmal_port_flush(MMAL_PORT_T *port){UNUSED(port);return MMAL_SUCCESS;}
 
 /** Set a parameter on a port.
  *
@@ -132,7 +135,7 @@ MMAL_STATUS_T mmal_port_flush(MMAL_PORT_T *port){}
  * @return MMAL_SUCCESS on success
  */
 MMAL_STATUS_T mmal_port_parameter_set(MMAL_PORT_T *port,
-   const MMAL_PARAMETER_HEADER_T *param){}
+   const MMAL_PARAMETER_HEADER_T *param){UNUSED(port);UNUSED(param);return MMAL_SUCCESS;}
 
 /** Get a parameter from a port.
  * The size field must be set on input to the maximum size of the parameter
@@ -149,7 +152,7 @@ MMAL_STATUS_T mmal_port_parameter_set(MMAL_PORT_T *port,
  * @return MMAL_SUCCESS on success
  */
 MMAL_STATUS_T mmal_port_parameter_get(MMAL_PORT_T *port,
-   MMAL_PARAMETER_HEADER_T *param){}
+   MMAL_PARAMETER_HEADER_T *param){UNUSED(port);UNUSED(param);return MMAL_SUCCESS;}
 
 /** Send a buffer header to a port.
  *
@@ -158,7 +161,7 @@ MMAL_STATUS_T mmal_port_parameter_get(MMAL_PORT_T *port,
  * @return MMAL_SUCCESS on success
  */
 MMAL_STATUS_T mmal_port_send_buffer(MMAL_PORT_T *port,
-   MMAL_BUFFER_HEADER_T *buffer){}
+   MMAL_BUFFER_HEADER_T *buffer){UNUSED(port);UNUSED(buffer);return MMAL_SUCCESS;}
 
 /** Connect an output port to an input port.
  *
@@ -175,7 +178,7 @@ MMAL_STATUS_T mmal_port_send_buffer(MMAL_PORT_T *port,
  * @param other_port The other port to connect.
  * @return MMAL_SUCCESS on success.
  */
-MMAL_STATUS_T mmal_port_connect(MMAL_PORT_T *port, MMAL_PORT_T *other_port){}
+MMAL_STATUS_T mmal_port_connect(MMAL_PORT_T *port, MMAL_PORT_T *other_port){UNUSED(port);UNUSED(other_port);return MMAL_SUCCESS;}
 
 /** Disconnect a connected port.
  *
@@ -186,7 +189,7 @@ MMAL_STATUS_T mmal_port_connect(MMAL_PORT_T *port, MMAL_PORT_T *other_port){}
  * @param port The ports to disconnect.
  * @return MMAL_SUCCESS on success.
  */
-MMAL_STATUS_T mmal_port_disconnect(MMAL_PORT_T *port){}
+MMAL_STATUS_T mmal_port_disconnect(MMAL_PORT_T *port){UNUSED(port);return MMAL_SUCCESS;}
 
 /** Allocate a payload buffer.
  * This allows a client to allocate memory for a payload buffer based on the preferences
@@ -200,7 +203,7 @@ MMAL_STATUS_T mmal_port_disconnect(MMAL_PORT_T *port){}
  *
  * @return Pointer to the allocated memory.
  */
-uint8_t *mmal_port_payload_alloc(MMAL_PORT_T *port, uint32_t payload_size){}
+uint8_t *mmal_port_payload_alloc(MMAL_PORT_T *port, uint32_t payload_size){UNUSED(port);UNUSED(payload_size);return NULL;}
 
 /** Free a payload buffer.
  * This allows a client to free memory allocated by a previous call to \ref mmal_port_payload_alloc.
@@ -210,7 +213,7 @@ uint8_t *mmal_port_payload_alloc(MMAL_PORT_T *port, uint32_t payload_size){}
  * @param port         Port responsible for allocating the memory.
  * @param payload      Pointer to the memory to free.
  */
-void mmal_port_payload_free(MMAL_PORT_T *port, uint8_t *payload){}
+void mmal_port_payload_free(MMAL_PORT_T *port, uint8_t *payload){UNUSED(port);UNUSED(payload);}
 
 /** Get an empty event buffer header from a port
  *
@@ -219,14 +222,14 @@ void mmal_port_payload_free(MMAL_PORT_T *port, uint8_t *payload){}
  * @param event The specific event FourCC required. See the \ref MmalEvents "pre-defined events".
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_port_event_get(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T **buffer, uint32_t event){}
+MMAL_STATUS_T mmal_port_event_get(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T **buffer, uint32_t event){UNUSED(port);UNUSED(buffer);UNUSED(event);return MMAL_SUCCESS;}
 /** Shallow copy a format structure.
  * It is worth noting that the extradata buffer will not be copied in the new format.
  *
  * @param format_dest destination \ref MMAL_ES_FORMAT_T for the copy
  * @param format_src source \ref MMAL_ES_FORMAT_T for the copy
  */
-void mmal_format_copy(MMAL_ES_FORMAT_T *format_dest, MMAL_ES_FORMAT_T *format_src){}
+void mmal_format_copy(MMAL_ES_FORMAT_T *format_dest, MMAL_ES_FORMAT_T *format_src){UNUSED(format_dest);UNUSED(format_src);}
 
 
 
@@ -246,7 +249,7 @@ void mmal_format_copy(MMAL_ES_FORMAT_T *format_dest, MMAL_ES_FORMAT_T *format_sr
  * @return MMAL_SUCCESS on success.
  */
 MMAL_STATUS_T mmal_connection_create(MMAL_CONNECTION_T **connection,
-   MMAL_PORT_T *out, MMAL_PORT_T *in, uint32_t flags){}
+   MMAL_PORT_T *out, MMAL_PORT_T *in, uint32_t flags){UNUSED(connection);UNUSED(out);UNUSED(in);UNUSED(flags);return MMAL_SUCCESS;}
 
 /** Acquire a reference on a connection.
  * Acquiring a reference on a connection will prevent a connection from being destroyed until
@@ -256,7 +259,7 @@ MMAL_STATUS_T mmal_connection_create(MMAL_CONNECTION_T **connection,
  *
  * @param connection connection to acquire
  */
-void mmal_connection_acquire(MMAL_CONNECTION_T *connection){}
+void mmal_connection_acquire(MMAL_CONNECTION_T *connection){UNUSED(connection);}
 
 /** Release a reference on a connection
  * Release an acquired reference on a connection. Triggers the destruction of the connection when
@@ -267,7 +270,7 @@ void mmal_connection_acquire(MMAL_CONNECTION_T *connection){}
  * @param connection connection to release
  * @return MMAL_SUCCESS on success
  */
-MMAL_STATUS_T mmal_connection_release(MMAL_CONNECTION_T *connection){}
+MMAL_STATUS_T mmal_connection_release(MMAL_CONNECTION_T *connection){UNUSED(connection);return MMAL_SUCCESS;}
 
 /** Destroy a connection.
  * Release an acquired reference on a connection. Only actually destroys the connection when
@@ -278,7 +281,7 @@ MMAL_STATUS_T mmal_connection_release(MMAL_CONNECTION_T *connection){}
  * @param connection The connection to be destroyed.
  * @return MMAL_SUCCESS on success.
  */
-MMAL_STATUS_T mmal_connection_destroy(MMAL_CONNECTION_T *connection){}
+MMAL_STATUS_T mmal_connection_destroy(MMAL_CONNECTION_T *connection){UNUSED(connection);return MMAL_SUCCESS;}
 
 /** Enable a connection.
  * The format of the two ports must have been committed before calling this function,
@@ -292,14 +295,14 @@ MMAL_STATUS_T mmal_connection_destroy(MMAL_CONNECTION_T *connection){}
  * @param connection The connection to be enabled.
  * @return MMAL_SUCCESS on success.
  */
-MMAL_STATUS_T mmal_connection_enable(MMAL_CONNECTION_T *connection){}
+MMAL_STATUS_T mmal_connection_enable(MMAL_CONNECTION_T *connection){UNUSED(connection);return MMAL_SUCCESS;}
 
 /** Disable a connection.
  *
  * @param connection The connection to be disabled.
  * @return MMAL_SUCCESS on success.
  */
-MMAL_STATUS_T mmal_connection_disable(MMAL_CONNECTION_T *connection){}
+MMAL_STATUS_T mmal_connection_disable(MMAL_CONNECTION_T *connection){UNUSED(connection);return MMAL_SUCCESS;}
 
 /** Apply a format changed event to the connection.
  * This function can be used when the client is processing buffer headers and receives
@@ -312,7 +315,7 @@ MMAL_STATUS_T mmal_connection_disable(MMAL_CONNECTION_T *connection){}
  * @return MMAL_SUCCESS on success.
  */
 MMAL_STATUS_T mmal_connection_event_format_changed(MMAL_CONNECTION_T *connection,
-   MMAL_BUFFER_HEADER_T *buffer){}
+   MMAL_BUFFER_HEADER_T *buffer){UNUSED(connection);UNUSED(buffer);return MMAL_SUCCESS;}
 
 
 /** Helper function to set the value of a rational parameter.
@@ -322,7 +325,7 @@ MMAL_STATUS_T mmal_connection_event_format_changed(MMAL_CONNECTION_T *connection
  *
  * @return MMAL_SUCCESS or error
  */
-MMAL_STATUS_T mmal_port_parameter_set_rational(MMAL_PORT_T *port, uint32_t id, MMAL_RATIONAL_T value){}
+MMAL_STATUS_T mmal_port_parameter_set_rational(MMAL_PORT_T *port, uint32_t id, MMAL_RATIONAL_T value){UNUSED(port);UNUSED(id);UNUSED(value);return MMAL_SUCCESS;}
 
 /** Helper function to set the value of a 32 bits signed integer parameter.
  * @param port   port on which to set the parameter
@@ -331,7 +334,7 @@ MMAL_STATUS_T mmal_port_parameter_set_rational(MMAL_PORT_T *port, uint32_t id, M
  *
  * @return MMAL_SUCCESS or error
  */
-MMAL_STATUS_T mmal_port_parameter_set_int32(MMAL_PORT_T *port, uint32_t id, int32_t value){}
+MMAL_STATUS_T mmal_port_parameter_set_int32(MMAL_PORT_T *port, uint32_t id, int32_t value){UNUSED(port);UNUSED(id);UNUSED(value);return MMAL_SUCCESS;}
 
 
 /** Helper function to set the value of a 32 bits unsigned integer parameter.
@@ -341,7 +344,7 @@ MMAL_STATUS_T mmal_port_parameter_set_int32(MMAL_PORT_T *port, uint32_t id, int3
  *
  * @return MMAL_SUCCESS or error
  */
-MMAL_STATUS_T mmal_port_parameter_set_uint32(MMAL_PORT_T *port, uint32_t id, uint32_t value){}
+MMAL_STATUS_T mmal_port_parameter_set_uint32(MMAL_PORT_T *port, uint32_t id, uint32_t value){UNUSED(port);UNUSED(id);UNUSED(value);return MMAL_SUCCESS;}
 
 
 /** Helper function to set the value of a boolean parameter.
@@ -351,7 +354,7 @@ MMAL_STATUS_T mmal_port_parameter_set_uint32(MMAL_PORT_T *port, uint32_t id, uin
  *
  * @return MMAL_SUCCESS or error
  */
-MMAL_STATUS_T mmal_port_parameter_set_boolean(MMAL_PORT_T *port, uint32_t id, MMAL_BOOL_T value){}
+MMAL_STATUS_T mmal_port_parameter_set_boolean(MMAL_PORT_T *port, uint32_t id, MMAL_BOOL_T value){UNUSED(port);UNUSED(id);UNUSED(value);return MMAL_SUCCESS;}
 
 
 
@@ -372,7 +375,7 @@ MMAL_STATUS_T mmal_port_parameter_set_boolean(MMAL_PORT_T *port, uint32_t id, MM
  * @return Pointer to the newly created pool or NULL on failure.
  */
 MMAL_POOL_T *mmal_port_pool_create(MMAL_PORT_T *port,
-   unsigned int headers, uint32_t payload_size){}
+   unsigned int headers, uint32_t payload_size){UNUSED(port);UNUSED(headers);UNUSED(payload_size);return NULL;}
 
 /** Release a buffer header.
  * Releasing a buffer header will decrease its reference counter and when no more references
@@ -385,11 +388,11 @@ MMAL_POOL_T *mmal_port_pool_create(MMAL_PORT_T *port,
  *
  * @param header buffer header to release
  */
-void mmal_buffer_header_release(MMAL_BUFFER_HEADER_T *header){}
+void mmal_buffer_header_release(MMAL_BUFFER_HEADER_T *header){UNUSED(header);}
 /** Get the number of MMAL_BUFFER_HEADER_T currently in a queue.
  *
  * @param queue  Pointer to a queue
  *
  * @return length (in elements) of the queue.
  */
-unsigned int mmal_queue_length(MMAL_QUEUE_T *queue){}
+unsigned int mmal_queue_length(MMAL_QUEUE_T *queue){UNUSED(queue);return 0;}
