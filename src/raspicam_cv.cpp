@@ -98,8 +98,6 @@ namespace raspicam {
             return _impl->getFrameRate();
         case CV_CAP_PROP_FORMAT :
             return imgFormat;
-        case CV_CAP_PROP_MODE :
-            return 0;
         case CV_CAP_PROP_BRIGHTNESS :
             return _impl->getBrightness();
         case CV_CAP_PROP_CONTRAST :
@@ -148,9 +146,6 @@ namespace raspicam {
             else res=false;//error int format
             return res;
         }break;
-        case CV_CAP_PROP_MODE ://nothing to  do yet
-            return false;
-            break;
         case CV_CAP_PROP_BRIGHTNESS :
             _impl->setBrightness ( value );
             break;
