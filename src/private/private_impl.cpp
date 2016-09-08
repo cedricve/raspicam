@@ -93,7 +93,7 @@ namespace raspicam {
             State.shutterSpeed=0;//auto
             State.awbg_red=1.0;
             State.awbg_blue=1.0;
-            State.sensor_mode = -1; //do not set mode by default
+            State.sensor_mode = 0; //do not set mode by default
 
         }
         bool  Private_Impl::open ( bool StartCapture ) {
