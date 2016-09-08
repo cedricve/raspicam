@@ -57,6 +57,7 @@ namespace raspicam {
          */
         struct RASPIVID_STATE
         {
+            int sensor_mode;                          /// Requested width of image
             int width;                          /// Requested width of image
             int height;                         /// requested height of image
             int framerate;                      /// Requested frame rate (fps)

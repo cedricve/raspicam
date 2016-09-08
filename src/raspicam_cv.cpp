@@ -88,7 +88,8 @@ namespace raspicam {
     double RaspiCam_Cv::get ( int propId ) {
 
         switch ( propId ) {
-
+        case CV_CAP_PROP_MODE:
+            return _impl->getSensorMode();
         case CV_CAP_PROP_FRAME_WIDTH :
             return _impl->getWidth();
         case CV_CAP_PROP_FRAME_HEIGHT :
@@ -124,7 +125,10 @@ namespace raspicam {
     bool RaspiCam_Cv::set ( int propId, double value ) {
 
         switch ( propId ) {
-
+        case CV_CAP_PROP_MODE:
+            _impl->setSensorMode(value);
+            break;
+            
         case CV_CAP_PROP_FRAME_WIDTH :
             _impl->setWidth ( value );
             break;

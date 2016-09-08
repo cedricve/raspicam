@@ -126,6 +126,9 @@ namespace raspicam {
 
             //sets capture format. Can not be changed once camera is opened
             void setFormat ( RASPICAM_FORMAT fmt );
+            //sets sensor mode. Can not be changed once camera is opened
+            void setSensorMode ( int mode );
+
             void setWidth ( unsigned int width ) ;
             void setHeight ( unsigned int height );
             void setCaptureSize ( unsigned int width, unsigned int height );
@@ -154,6 +157,10 @@ namespace raspicam {
 
             RASPICAM_FORMAT  getFormat() const {return State.captureFtm;}
             //Accessors
+            unsigned int getSensorMode() const
+            {
+                return State.sensor_mode;
+            }
             unsigned int getWidth() const
             {
                 return State.width;
