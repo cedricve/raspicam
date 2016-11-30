@@ -140,7 +140,7 @@ namespace raspicam {
                 imgFormat=value;
             }
             else if (value==CV_8UC3){
-                _impl->setFormat(RASPICAM_FORMAT_RGB);
+                _impl->setFormat(RASPICAM_FORMAT_BGR);
                 imgFormat=value;
             }
             else res=false;//error int format
