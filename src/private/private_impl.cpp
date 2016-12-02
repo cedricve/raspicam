@@ -814,9 +814,9 @@ namespace raspicam {
         int Private_Impl::convertFormat ( RASPICAM_FORMAT fmt ) {
             switch ( fmt ) {
             case RASPICAM_FORMAT_RGB:
-                return MMAL_ENCODING_BGR24;
-            case RASPICAM_FORMAT_BGR:
                 return MMAL_ENCODING_RGB24;
+            case RASPICAM_FORMAT_BGR:
+                return MMAL_ENCODING_BGR24;
             case RASPICAM_FORMAT_GRAY:
                 return MMAL_ENCODING_I420;
             case RASPICAM_FORMAT_YUV420:
