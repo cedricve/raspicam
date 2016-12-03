@@ -57,6 +57,7 @@ namespace raspicam {
          */
         struct RASPIVID_STATE
         {
+            int sensor_mode;                          /// Requested width of image
             int width;                          /// Requested width of image
             int height;                         /// requested height of image
             int framerate;                      /// Requested frame rate (fps)
@@ -85,6 +86,7 @@ namespace raspicam {
             PARAM_FLOAT_RECT_T  roi;   /// region of interest to use on the sensor. Normalised [0,1] values in the rect
             float awbg_red;//white balance red and blue
             float awbg_blue;
+            int cameraNum;
         } ;
 
         //clean buffer

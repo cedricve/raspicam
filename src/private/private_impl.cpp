@@ -93,11 +93,15 @@ namespace raspicam {
             State.shutterSpeed=0;//auto
             State.awbg_red=1.0;
             State.awbg_blue=1.0;
+            State.sensor_mode = 0; //do not set mode by default
+            State.cameraNum = 0; //by default go for camera 0
 
         }
-        bool  Private_Impl::open ( bool StartCapture ) {
+        bool  Private_Impl::open ( bool StartCapture, int cameraNumber ) {
             if ( _isOpened ) return false; //already opened
 // create camera
+            setCameraNum(cameraNumber);
+
             if ( ! create_camera_component ( &State ) ) {
                 cerr<<__func__<<" Failed to create camera component"<<__FILE__<<" "<<__LINE__<<endl;
                 return false;
@@ -244,6 +248,16 @@ namespace raspicam {
                 return 0;
             }
 
+            MMAL_PARAMETER_INT32_T camera_num = {{MMAL_PARAMETER_CAMERA_NUM, sizeof(camera_num)}, getCameraNum()};
+
+            status = mmal_port_parameter_set(camera->control, &camera_num.hdr);
+
+            if (status != MMAL_SUCCESS)
+            {
+                cerr<< ( "Failed to select camera" );
+                return 0;
+            }
+
             if ( !camera->output_num ) {
                 cerr<< ( "Camera doesn't have output ports" );
                 mmal_component_destroy ( camera );
@@ -251,6 +265,14 @@ namespace raspicam {
             }
 
             video_port = camera->output[MMAL_CAMERA_VIDEO_PORT];
+        
+            //set sensor mode
+            if ( state->sensor_mode != 0 && mmal_port_parameter_set_uint32 ( camera->control, 
+                                                    MMAL_PARAMETER_CAMERA_CUSTOM_SENSOR_CONFIG, 
+                                                    state->sensor_mode)  != MMAL_SUCCESS)
+            {
+                cerr << __func__ << ": Failed to set sensmode.";
+            }
 
             //  set up the camera configuration
 
@@ -416,7 +438,6 @@ namespace raspicam {
 
         }
 
-
         void Private_Impl::commitAWB() {
             MMAL_PARAMETER_AWBMODE_T param = {{MMAL_PARAMETER_AWB_MODE,sizeof ( param ) }, convertAWB ( State.rpc_awbMode ) };
             if ( mmal_port_parameter_set ( State.camera_component->control, &param.hdr ) != MMAL_SUCCESS )
@@ -567,6 +588,14 @@ namespace raspicam {
             State.captureFtm = fmt;
         }
 
+        void Private_Impl::setSensorMode ( int mode ) {
+            if ( isOpened() ) {
+                cerr<<__FILE__<<":"<<__LINE__<<":"<<__func__<<": can not change sensor mode with camera already opened"<<endl;
+                return;
+            }
+            State.sensor_mode = mode;
+        }
+
         void Private_Impl::setCaptureSize ( unsigned int width, unsigned int height ) {
             setWidth ( width );
             setHeight ( height );
@@ -671,6 +700,10 @@ namespace raspicam {
 
         void Private_Impl::setFrameRate ( int frames_per_second ) {
             State.framerate = frames_per_second;
+        }
+
+        void Private_Impl::setCameraNum ( int cameraNum ){
+            State.cameraNum = cameraNum;
         }
 
         MMAL_PARAM_EXPOSUREMETERINGMODE_T Private_Impl::convertMetering ( RASPICAM_METERING metering ) {
@@ -798,9 +831,9 @@ namespace raspicam {
         int Private_Impl::convertFormat ( RASPICAM_FORMAT fmt ) {
             switch ( fmt ) {
             case RASPICAM_FORMAT_RGB:
-                return MMAL_ENCODING_BGR24;
-            case RASPICAM_FORMAT_BGR:
                 return MMAL_ENCODING_RGB24;
+            case RASPICAM_FORMAT_BGR:
+                return MMAL_ENCODING_BGR24;
             case RASPICAM_FORMAT_GRAY:
                 return MMAL_ENCODING_I420;
             case RASPICAM_FORMAT_YUV420:

@@ -47,8 +47,8 @@ namespace raspicam {
     }
 
 
-    bool RaspiCam::open ( bool StartCapture ) {
-        return _impl->open ( StartCapture );
+    bool RaspiCam::open ( bool StartCapture, int cameraNumber ) {
+        return _impl->open ( StartCapture, cameraNumber );
     }
     bool RaspiCam::startCapture() {
         return _impl->startCapture();
