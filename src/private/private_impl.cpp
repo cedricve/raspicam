@@ -100,7 +100,7 @@ namespace raspicam {
         bool  Private_Impl::open ( bool StartCapture, int cameraNumber ) {
             if ( _isOpened ) return false; //already opened
 // create camera
-            State.cameraNum = cameraNumber;
+            setCameraNum(cameraNumber);
 
             if ( ! create_camera_component ( &State ) ) {
                 cerr<<__func__<<" Failed to create camera component"<<__FILE__<<" "<<__LINE__<<endl;
@@ -248,7 +248,7 @@ namespace raspicam {
                 return 0;
             }
 
-            MMAL_PARAMETER_INT32_T camera_num = {{MMAL_PARAMETER_CAMERA_NUM, sizeof(camera_num)}, state->cameraNum};
+            MMAL_PARAMETER_INT32_T camera_num = {{MMAL_PARAMETER_CAMERA_NUM, sizeof(camera_num)}, getCameraNum()};
 
             status = mmal_port_parameter_set(camera->control, &camera_num.hdr);
 
@@ -700,6 +700,10 @@ namespace raspicam {
 
         void Private_Impl::setFrameRate ( int frames_per_second ) {
             State.framerate = frames_per_second;
+        }
+
+        void Private_Impl::setCameraNum ( int cameraNum ){
+            State.cameraNum = cameraNum;
         }
 
         MMAL_PARAM_EXPOSUREMETERINGMODE_T Private_Impl::convertMetering ( RASPICAM_METERING metering ) {

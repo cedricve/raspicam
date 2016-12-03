@@ -155,6 +155,8 @@ namespace raspicam {
             void setShutterSpeed ( unsigned int shutter ); //currently not  supported
             void setFrameRate ( int fps );
 
+            void setCameraNum (int cameraNum);
+
             RASPICAM_FORMAT  getFormat() const {return State.captureFtm;}
             //Accessors
             unsigned int getSensorMode() const
@@ -230,6 +232,11 @@ namespace raspicam {
             bool isVerticallyFlipped() const
             {
                 return State.vflip;
+            }
+
+            int getCameraNum() const
+            {
+                return State.cameraNum;
             }
 
 
