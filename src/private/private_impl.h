@@ -89,7 +89,7 @@ namespace raspicam {
             ~Private_Impl();
             /**Opens the camera and start capturing
             */
-            bool open ( bool StartCapture=true );
+            bool open ( bool StartCapture=true, int cameraNumber=0 );
             /**indicates if camera is open
             */
             bool isOpened() const

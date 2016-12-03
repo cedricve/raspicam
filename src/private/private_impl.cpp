@@ -94,11 +94,14 @@ namespace raspicam {
             State.awbg_red=1.0;
             State.awbg_blue=1.0;
             State.sensor_mode = 0; //do not set mode by default
+            State.cameraNum = 0; //by default go for camera 0
 
         }
-        bool  Private_Impl::open ( bool StartCapture ) {
+        bool  Private_Impl::open ( bool StartCapture, int cameraNumber ) {
             if ( _isOpened ) return false; //already opened
 // create camera
+            State.cameraNum = cameraNumber;
+
             if ( ! create_camera_component ( &State ) ) {
                 cerr<<__func__<<" Failed to create camera component"<<__FILE__<<" "<<__LINE__<<endl;
                 return false;
@@ -242,6 +245,16 @@ namespace raspicam {
 
             if ( status != MMAL_SUCCESS ) {
                 cerr<< ( "Failed to create camera component" );
+                return 0;
+            }
+
+            MMAL_PARAMETER_INT32_T camera_num = {{MMAL_PARAMETER_CAMERA_NUM, sizeof(camera_num)}, state->cameraNum};
+
+            status = mmal_port_parameter_set(camera->control, &camera_num.hdr);
+
+            if (status != MMAL_SUCCESS)
+            {
+                cerr<< ( "Failed to select camera" );
                 return 0;
             }
 

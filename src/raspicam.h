@@ -59,7 +59,7 @@ namespace raspicam {
         /**Opens the camera
         * @param StartCapture determines if camera must start capture or not.
               */
-        bool open ( bool StartCapture=true );
+        bool open ( bool StartCapture=true, int cameraNumber=0 );
         /**Makes camera start capturing
          */
         bool startCapture();
