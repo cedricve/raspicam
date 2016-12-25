@@ -261,7 +261,7 @@ namespace raspicam {
                 cerr << __func__ << ": Failed to set sensmode.";
             }
 
-            _rgb_bgr_fixed = !!(mmal_util_rgb_order_fixed(video_port));
+            _rgb_bgr_fixed = !(mmal_util_rgb_order_fixed(video_port));
 
             //  set up the camera configuration
 
