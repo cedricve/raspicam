@@ -57,7 +57,10 @@ namespace raspicam {
         ~RaspiCam_Cv();
         /** Open  capturing device for video capturing
          */
-        bool open ( void );
+        bool open ( bool StartCapture=true, int cameraNumber=0 );
+        /**Makes camera start capturing
+         */
+        bool startCapture();
         /**
          * Returns true if video capturing has been initialized already.
          */

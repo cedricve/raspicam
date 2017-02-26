@@ -52,12 +52,18 @@ namespace raspicam {
 
     /** Open  capturing device for video capturing
      */
-    bool RaspiCam_Cv::open ( void ) {
-        return _impl->open();
+    bool RaspiCam_Cv::open ( bool StartCapture, int cameraNumber ) {
+        return _impl->open ( StartCapture, cameraNumber );
     }
     /**
      * Returns true if video capturing has been initialized already.
      */
+    bool RaspiCam_Cv::startCapture() {
+        return _impl->startCapture();
+    }
+	/**
+	 * Returns true if video capturing has been initialized already.
+	 */
     bool RaspiCam_Cv::isOpened() const {return _impl->isOpened();}
     /**
     *Closes video file or capturing device.
