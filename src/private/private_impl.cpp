@@ -254,7 +254,7 @@ namespace raspicam {
 
             if (status != MMAL_SUCCESS)
             {
-                cerr<< ( "Failed to select camera" );
+                cerr << "Could not select camera " << getCameraNum() << '\n';
                 return 0;
             }
 
