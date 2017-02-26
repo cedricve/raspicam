@@ -65,6 +65,7 @@ namespace raspicam {
             unsigned int rotation; // 0 to 359
             unsigned int brightness; // 0 to 100
             unsigned int quality; // 0 to 100
+            int cameraNum; // 0 or 1
             int iso;
             int sharpness; // -100 to 100
             int contrast; // -100 to 100
@@ -118,7 +119,7 @@ namespace raspicam {
                 encoder_output_port = NULL;
 		_isInitialized=false;
             }
-            int initialize();
+            int initialize( int cameraNumber=0 );
             int startCapture ( imageTakenCallback userCallback, unsigned char * preallocated_data, unsigned int offset, unsigned int length );
             void stopCapture();
             bool takePicture ( unsigned char * preallocated_data, unsigned int length );
@@ -143,12 +144,14 @@ namespace raspicam {
             void setMetering ( RASPICAM_METERING metering );
             void setHorizontalFlip ( bool hFlip );
             void setVerticalFlip ( bool vFlip );
+			void setCameraNum ( int cameraNumber );
 
             unsigned int getWidth();
             unsigned int getHeight();
             unsigned int getBrightness();
             unsigned int getRotation();
             unsigned int getQuality();
+			int getCameraNum();
             int getISO();
             int getSharpness();
             int getContrast();
