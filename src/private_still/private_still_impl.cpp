@@ -577,7 +577,7 @@ namespace raspicam {
 				cerr<<__func__<<": cannot set stereo mode after camera is initialized!"<<endl;
 				return false;
 			}	
-			if ( getWidth() % 128 ) {
+			if ( (getWidth() % 128) != 0 ) {
 				cerr<<__func__<<": cannot set stereo mode unless width is multiple of 128!"<<endl;
 				return false;
 			}		
