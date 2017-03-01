@@ -96,8 +96,8 @@ namespace raspicam {
             State.sensor_mode = 0; //do not set mode by default
             State.cameraNum = 0; //by default go for camera 0
 			State.stereoMode = MMAL_STEREOSCOPIC_MODE_NONE;
-			State.stereoDecimate = false;
-			State.stereoSwapEyes = false;
+			State.stereoDecimate = MMAL_FALSE;
+			State.stereoSwapEyes = MMAL_FALSE;
 
         }
         bool  Private_Impl::open ( bool StartCapture, int cameraNumber ) {
