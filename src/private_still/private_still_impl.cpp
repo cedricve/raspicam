@@ -141,8 +141,8 @@ namespace raspicam {
             //roi.x = params->roi.y = 0.0;
             //roi.w = params->roi.h = 1.0;
 			stereoMode = MMAL_STEREOSCOPIC_MODE_NONE;
-			stereoDecimate = false;
-			stereoSwapEyes = false;
+			stereoDecimate = MMAL_FALSE;
+			stereoSwapEyes = MMAL_FALSE;
         }
 
         void Private_Impl_Still::commitParameters() {
