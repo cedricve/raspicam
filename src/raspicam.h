@@ -139,6 +139,7 @@ namespace raspicam {
         void setHorizontalFlip ( bool hFlip );
         void setVerticalFlip ( bool vFlip );
         void setFrameRate ( int frames_per_second );
+		bool setStereoMode ( int mode, bool decimate=false, bool swapEyes=false );
 
         //Accessors
         RASPICAM_FORMAT getFormat() const;

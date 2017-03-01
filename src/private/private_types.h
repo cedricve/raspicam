@@ -87,6 +87,9 @@ namespace raspicam {
             float awbg_red;//white balance red and blue
             float awbg_blue;
             int cameraNum;
+			MMAL_STEREOSCOPIC_MODE_T stereoMode;
+			MMAL_BOOL_T stereoDecimate;
+			MMAL_BOOL_T stereoSwapEyes;
         } ;
 
         //clean buffer

@@ -103,6 +103,10 @@ namespace raspicam {
          */
 
         bool set ( int propId, double value );
+		/**
+		 * Sets parameters for stereo mode functionality (compute module only).
+		 */
+		bool setStereoMode ( int mode, bool decimate=false, bool swapEyes=false );
 
         /** Returns the camera identifier. We assume the camera id is the one of the raspberry obtained using raspberry serial number obtained in /proc/cpuinfo
          */
