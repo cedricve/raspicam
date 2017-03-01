@@ -180,6 +180,13 @@ namespace raspicam {
     std::string RaspiCam_Still_Cv::getId() const{
         return _impl->getId();
     }
+	
+	/**
+     * Sets parameters for stereo mode functionality (compute module only).
+     */
+    bool RaspiCam_Still_Cv::setStereoMode( int mode, bool decimate, bool swapEyes ) {
+        return _impl->setStereoMode( mode, decimate, swapEyes );
+    }
 }
 
 

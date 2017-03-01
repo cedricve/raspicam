@@ -113,6 +113,9 @@ namespace raspicam {
     void RaspiCam_Still::setVerticalFlip ( bool vFlip ) {
         _impl->setVerticalFlip ( vFlip );
     }
+	bool RaspiCam_Still::setStereoMode( int mode, bool decimate, bool swapEyes ) {
+        return _impl->setStereoMode( mode, decimate, swapEyes );
+    }
 
     unsigned int RaspiCam_Still::getWidth() {
         return _impl->getWidth();

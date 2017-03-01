@@ -140,6 +140,9 @@ namespace raspicam {
             verticalFlip = false;
             //roi.x = params->roi.y = 0.0;
             //roi.w = params->roi.h = 1.0;
+			stereoMode = MMAL_STEREOSCOPIC_MODE_NONE;
+			stereoDecimate = false;
+			stereoSwapEyes = false;
         }
 
         void Private_Impl_Still::commitParameters() {
@@ -202,7 +205,22 @@ namespace raspicam {
                 destroyCamera();
                 return -1;
             }
+			
+			MMAL_PARAMETER_STEREOSCOPIC_MODE_T stereo_mode = {
+				{MMAL_PARAMETER_STEREOSCOPIC_MODE, sizeof(stereo_mode)},
+				stereoMode,
+				stereoDecimate,
+				stereoSwapEyes
+			};
 
+            if ((mmal_port_parameter_set(camera->output[0], &stereo_mode.hdr) != MMAL_SUCCESS) ||
+				(mmal_port_parameter_set(camera->output[1], &stereo_mode.hdr) != MMAL_SUCCESS) ||
+				(mmal_port_parameter_set(camera->output[2], &stereo_mode.hdr) != MMAL_SUCCESS)) {
+					cerr << "Could not set stereoscopic mode " << '\n';
+					destroyCamera();
+                return -1;
+			}
+			
             if ( !camera->output_num ) {
                 cout << API_NAME << ": Camera does not have output ports!\n";
                 destroyCamera();
@@ -210,7 +228,7 @@ namespace raspicam {
             }
 
             camera_still_port = camera->output[MMAL_CAMERA_CAPTURE_PORT];
-			
+
 			MMAL_PARAMETER_INT32_T camera_num = {
 				{MMAL_PARAMETER_CAMERA_NUM, sizeof ( camera_num ) },
 				getCameraNum()
@@ -552,6 +570,21 @@ namespace raspicam {
         void Private_Impl_Still::setVerticalFlip ( bool vFlip ) {
             verticalFlip = vFlip;
             changedSettings = true;
+        }
+		
+        bool Private_Impl_Still::setStereoMode ( int mode, bool decimate, bool swapEyes ) {	
+			if ( _isInitialized ) {
+				cerr<<__func__<<": cannot set stereo mode after camera is initialized!"<<endl;
+				return false;
+			}	
+			if ( getWidth() % 128 ) {
+				cerr<<__func__<<": cannot set stereo mode unless width is multiple of 128!"<<endl;
+				return false;
+			}		
+            stereoMode = static_cast<MMAL_STEREOSCOPIC_MODE_T>(mode);
+            stereoDecimate = static_cast<MMAL_BOOL_T>(decimate);
+            stereoSwapEyes = static_cast<MMAL_BOOL_T>(swapEyes);
+			return true;
         }
 
         unsigned int Private_Impl_Still::getWidth() {
