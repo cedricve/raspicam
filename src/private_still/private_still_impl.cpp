@@ -219,7 +219,7 @@ namespace raspicam {
 			{
                 cerr << "Could not select camera " << getCameraNum() << '\n';
                 destroyCamera();
-                return 0;
+                return -1;
 			}
 
             // Enable the camera, and tell it its control callback function
