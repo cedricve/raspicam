@@ -95,6 +95,9 @@ namespace raspicam {
             State.awbg_blue=1.0;
             State.sensor_mode = 0; //do not set mode by default
             State.cameraNum = 0; //by default go for camera 0
+			State.stereoMode = MMAL_STEREOSCOPIC_MODE_NONE;
+			State.stereoDecimate = MMAL_FALSE;
+			State.stereoSwapEyes = MMAL_FALSE;
 
         }
         bool  Private_Impl::open ( bool StartCapture, int cameraNumber ) {
@@ -247,7 +250,21 @@ namespace raspicam {
                 cerr<< ( "Failed to create camera component" );
                 return 0;
             }
+												
+			MMAL_PARAMETER_STEREOSCOPIC_MODE_T stereo_mode = {
+				{MMAL_PARAMETER_STEREOSCOPIC_MODE, sizeof(stereo_mode)},
+				state->stereoMode,
+				state->stereoDecimate,
+				state->stereoSwapEyes
+			};
 
+            if ((mmal_port_parameter_set(camera->output[0], &stereo_mode.hdr) != MMAL_SUCCESS) ||
+				(mmal_port_parameter_set(camera->output[1], &stereo_mode.hdr) != MMAL_SUCCESS) ||
+				(mmal_port_parameter_set(camera->output[2], &stereo_mode.hdr) != MMAL_SUCCESS)) {
+					cerr << "Could not set stereoscopic mode " << '\n';
+					return 0;
+			}
+			
             MMAL_PARAMETER_INT32_T camera_num = {{MMAL_PARAMETER_CAMERA_NUM, sizeof(camera_num)}, getCameraNum()};
 
             status = mmal_port_parameter_set(camera->control, &camera_num.hdr);
@@ -702,8 +719,19 @@ namespace raspicam {
             State.framerate = frames_per_second;
         }
 
-        void Private_Impl::setCameraNum ( int cameraNum ){
+        void Private_Impl::setCameraNum ( int cameraNum ) {
             State.cameraNum = cameraNum;
+        }
+
+        bool Private_Impl::setStereoMode ( int mode, bool decimate, bool swapEyes ) {	
+			if ( isOpened() ) {
+				cerr<<__func__<<": cannot set stereo mode after camera is opened!"<<endl;
+				return false;
+			}		
+            State.stereoMode = static_cast<MMAL_STEREOSCOPIC_MODE_T>(mode);
+            State.stereoDecimate = static_cast<MMAL_BOOL_T>(decimate);
+            State.stereoSwapEyes = static_cast<MMAL_BOOL_T>(swapEyes);
+			return true;
         }
 
         MMAL_PARAM_EXPOSUREMETERINGMODE_T Private_Impl::convertMetering ( RASPICAM_METERING metering ) {

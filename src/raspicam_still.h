@@ -87,6 +87,7 @@ namespace raspicam {
         void setMetering ( RASPICAM_METERING metering );
         void setHorizontalFlip ( bool hFlip );
         void setVerticalFlip ( bool vFlip );
+		bool setStereoMode ( int mode, bool decimate=false, bool swapEyes=false );
 
         unsigned int getWidth();
         unsigned int getHeight();

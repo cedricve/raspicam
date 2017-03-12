@@ -137,6 +137,9 @@ namespace raspicam {
     void RaspiCam::setFrameRate ( int frames_per_second ) {
         _impl->setFrameRate ( frames_per_second );
     }
+	bool RaspiCam::setStereoMode( int mode, bool decimate, bool swapEyes ) {
+        return _impl->setStereoMode( mode, decimate, swapEyes );
+    }
 
     
     RASPICAM_FORMAT RaspiCam::getFormat()const{return _impl->getFormat( ); }

@@ -156,6 +156,7 @@ namespace raspicam {
             void setFrameRate ( int fps );
 
             void setCameraNum (int cameraNum);
+            bool setStereoMode (int mode, bool decimate=false, bool swapEyes=false);
 
             RASPICAM_FORMAT  getFormat() const {return State.captureFtm;}
             //Accessors

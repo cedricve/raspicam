@@ -78,6 +78,9 @@ namespace raspicam {
             bool changedSettings;
             bool horizontalFlip;
             bool verticalFlip;
+			MMAL_STEREOSCOPIC_MODE_T stereoMode;
+			MMAL_BOOL_T stereoDecimate;
+			MMAL_BOOL_T stereoSwapEyes;
 
             MMAL_FOURCC_T convertEncoding ( RASPICAM_ENCODING encoding );
             MMAL_PARAM_EXPOSUREMETERINGMODE_T convertMetering ( RASPICAM_METERING metering );
@@ -144,8 +147,8 @@ namespace raspicam {
             void setMetering ( RASPICAM_METERING metering );
             void setHorizontalFlip ( bool hFlip );
             void setVerticalFlip ( bool vFlip );
-			void setCameraNum ( int cameraNumber );
-
+			      void setCameraNum ( int cameraNumber );
+            bool setStereoMode (int mode, bool decimate=false, bool swapEyes=false);
             unsigned int getWidth();
             unsigned int getHeight();
             unsigned int getBrightness();
