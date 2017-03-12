@@ -210,6 +210,17 @@ namespace raspicam {
             }
 
             camera_still_port = camera->output[MMAL_CAMERA_CAPTURE_PORT];
+			
+			MMAL_PARAMETER_INT32_T camera_num = {
+				{MMAL_PARAMETER_CAMERA_NUM, sizeof ( camera_num ) },
+				getCameraNum()
+			};
+			if (mmal_port_parameter_set ( camera->control, &camera_num.hdr) != MMAL_SUCCESS )
+			{
+                cerr << "Could not select camera " << getCameraNum() << '\n';
+                destroyCamera();
+                return 0;
+			}
 
             // Enable the camera, and tell it its control callback function
             if ( mmal_port_enable ( camera->control, control_callback ) ) {
@@ -332,8 +343,9 @@ namespace raspicam {
             }
         }
 
-        int Private_Impl_Still::initialize() {
+        int Private_Impl_Still::initialize( int cameraNumber ) {
             if ( _isInitialized ) return 0;
+			setCameraNum( cameraNumber );
             if ( createCamera() ) {
                 cout << API_NAME << ": Failed to create camera component.\n";
                 destroyCamera();
@@ -454,6 +466,10 @@ namespace raspicam {
             setHeight ( height );
         }
 
+        void Private_Impl_Still::setCameraNum  ( int cameraNumber ) {
+            cameraNum = cameraNumber;
+        }
+
         void Private_Impl_Still::setBrightness ( unsigned int brightness ) {
             if ( brightness > 100 )
                 brightness = brightness % 100;
@@ -556,6 +572,10 @@ namespace raspicam {
 
         unsigned int Private_Impl_Still::getQuality() {
             return quality;
+        }
+
+        int Private_Impl_Still::getCameraNum() {
+            return cameraNum;
         }
 
         int Private_Impl_Still::getISO() {

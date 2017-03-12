@@ -46,8 +46,8 @@ namespace raspicam {
     }
 
 
-    bool RaspiCam_Still::open ( ) {
-        return _impl->initialize() ==0;
+    bool RaspiCam_Still::open ( int cameraNumber ) {
+        return _impl->initialize( cameraNumber ) ==0;
     }
     bool RaspiCam_Still::grab_retrieve ( unsigned char * preallocated_data, unsigned int length ) {
         return _impl->takePicture ( preallocated_data, length );

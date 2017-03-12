@@ -62,7 +62,7 @@ namespace raspicam {
         ~RaspiCam_Still_Cv();
         /** Open  capturing device for video capturing
          */
-        bool open ( void );
+        bool open ( int cameraNumber=0 );
         /**
          * Returns true if video capturing has been initialized already.
          */

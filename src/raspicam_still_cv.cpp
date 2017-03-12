@@ -54,8 +54,8 @@ namespace raspicam {
     }
 
 
-    bool RaspiCam_Still_Cv::open ( ) {
-        _isOpened= _impl->initialize() ==0;
+    bool RaspiCam_Still_Cv::open ( int cameraNumber ) {
+        _isOpened= _impl->initialize( cameraNumber ) ==0;
         return _isOpened;
     }
 
