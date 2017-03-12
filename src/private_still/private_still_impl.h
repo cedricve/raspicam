@@ -147,9 +147,8 @@ namespace raspicam {
             void setMetering ( RASPICAM_METERING metering );
             void setHorizontalFlip ( bool hFlip );
             void setVerticalFlip ( bool vFlip );
-			void setCameraNum ( int cameraNumber );
+			      void setCameraNum ( int cameraNumber );
             bool setStereoMode (int mode, bool decimate=false, bool swapEyes=false);
-
             unsigned int getWidth();
             unsigned int getHeight();
             unsigned int getBrightness();
