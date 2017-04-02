@@ -44,6 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "raspicam.h"
 using namespace std;
 bool doTestSpeedOnly=false;
+bool useUserCallback=false;
 size_t nFramesCaptured=100;
 //parse command line
 //returns the index of a command line param in argv. If not found, return -1
@@ -115,6 +116,8 @@ void processCommandLine ( int argc,char **argv,raspicam::RaspiCam &Camera ) {
       Camera.setFormat(raspicam::RASPICAM_FORMAT_YUV420);
     if ( findParam ( "-test_speed",argc,argv ) !=-1 )
         doTestSpeedOnly=true;
+    if ( findParam ( "-usr_cb",argc,argv ) !=-1 )
+        useUserCallback=true;
     int idx;
     if ( ( idx=findParam ( "-ex",argc,argv ) ) !=-1 )
         Camera.setExposure ( getExposureFromString ( argv[idx+1] ) );
@@ -129,6 +132,7 @@ void showUsage() {
     cout<<"[-help shows this help]\n"<<endl;
     cout<<"[-gr sets gray color mode]\n"<<endl;
     cout<<"[-test_speed use for test speed and no images will be saved]\n";
+    cout<<"[-usr_cb use for test the user-defined callback mechanism]\n";
     cout<<"[-yuv sets yuv420 color mode]\n"<<endl;
     cout<<"[-w width] [-h height] \n[-br brightness_val(0,100)]\n[-sh  sharpness_val (-100 to 100)]\n";
     cout<<"[-co contrast_val (-100 to 100)]\n[-sa saturation_val (-100 to 100)]\n";
@@ -178,6 +182,38 @@ void saveImage ( string filepath,unsigned char *data,raspicam::RaspiCam &Camera 
     outFile.write ( ( char* ) data,Camera.getImageBufferSize() );
 }
 
+struct CallBackData_t{
+    raspicam::RaspiCam* Camera;
+    unsigned char *data;
+    size_t i=0;
+    volatile bool isCapturing = false;
+};
+
+void vidInCallback(void* data){
+    // new image captured
+    if (0 == data) return;
+    struct CallBackData_t* camData = (struct CallBackData_t*)data;
+
+    if (!camData->isCapturing) return;
+    camData->Camera->retrieve ( camData->data );
+    if ( !doTestSpeedOnly ) {
+        if ( camData->i%5==0 )     cout<<"\r capturing ..."<<camData->i<<"/"<<nFramesCaptured<<std::flush;
+        if ( camData->i%30==0 && camData->i!=0  && nFramesCaptured>0 ) { //save image if not in inifite loop
+            std::stringstream fn;
+            fn<<"image";
+            if (camData->i<10) fn<<"0";
+            fn<<camData->i<<".ppm";
+            saveImage ( fn.str(),camData->data,*(camData->Camera) );
+            cerr<<"Saving "<<fn.str()<<endl;
+        }
+    }
+    if (++(camData->i) >= nFramesCaptured){
+        //stops when nFrames captured or at infinity lpif nFramesCaptured<0
+        camData->Camera->setUserCallback(0);
+        camData->isCapturing = false;
+    }
+
+}
 
 int main ( int argc,char **argv ) {
     if ( argc==1 ) {
@@ -202,26 +238,42 @@ int main ( int argc,char **argv ) {
     unsigned char *data=new unsigned char[  Camera.getImageBufferSize( )];
     Timer timer;
 
+    // prepare callback data
+    struct CallBackData_t camData;
+    if (useUserCallback) {
+        camData.Camera = &Camera;
+        camData.data = data;
+        camData.i = 0;
+        // set the user callback
+        Camera.setUserCallback(&vidInCallback, &camData);
+        cout<<"user callback set"<<endl;
+    }
 
     cout<<"Capturing...."<<endl;
     size_t i=0;
     timer.start();
- do{
-        Camera.grab();
-        Camera.retrieve ( data );
-        if ( !doTestSpeedOnly ) {
-            if ( i%5==0 ) 	  cout<<"\r capturing ..."<<i<<"/"<<nFramesCaptured<<std::flush;
-            if ( i%30==0 && i!=0  && nFramesCaptured>0 ) { //save image if not in inifite loop
-                std::stringstream fn;
-                fn<<"image";
-		if (i<10) fn<<"0";
-		fn<<i<<".ppm";
-                saveImage ( fn.str(),data,Camera );
-		cerr<<"Saving "<<fn.str()<<endl;
+    if (useUserCallback) {
+        // start the test
+        camData.isCapturing = true;
+        while( camData.isCapturing) {usleep(10);};
+    } else {
+        // not using user callback
+        do{
+            Camera.grab();
+            Camera.retrieve ( data );
+            if ( !doTestSpeedOnly ) {
+                if ( i%5==0 ) 	  cout<<"\r capturing ..."<<i<<"/"<<nFramesCaptured<<std::flush;
+                if ( i%30==0 && i!=0  && nFramesCaptured>0 ) { //save image if not in inifite loop
+                    std::stringstream fn;
+                    fn<<"image";
+                    if (i<10) fn<<"0";
+                    fn<<i<<".ppm";
+                    saveImage ( fn.str(),data,Camera );
+                    cerr<<"Saving "<<fn.str()<<endl;
+                }
             }
-        }
-    }while(++i<nFramesCaptured || nFramesCaptured==0);//stops when nFrames captured or at infinity lpif nFramesCaptured<0
-
+        }while(++i<nFramesCaptured || nFramesCaptured==0);//stops when nFrames captured or at infinity lpif nFramesCaptured<0
+    }
     timer.end();
     if ( !doTestSpeedOnly )    cout<<endl<<"Images saved in imagexx.ppm"<<endl;
 
