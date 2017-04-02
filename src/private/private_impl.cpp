@@ -144,6 +144,11 @@ namespace raspicam {
             return true;
         }
 
+        void Private_Impl::setUserCallback(void (*userCallback)(void*) , void* data){
+            callback_data._userCallbackData = data;
+            callback_data._userCallback = userCallback;
+        }
+
         void Private_Impl::release() {
             if ( !_isOpened ) return;
 
@@ -528,7 +533,8 @@ namespace raspicam {
 //            pData->_mutex.lock();
              std::unique_lock<std::mutex> lck ( pData->_mutex );
             if ( pData ) {
-                if ( pData->wantToGrab &&  buffer->length ) {
+                if( buffer->length &&
+                        ( pData->_userCallback || pData->wantToGrab )){
                     mmal_buffer_header_mem_lock ( buffer );
                     pData->_buffData.resize ( buffer->length );
                     memcpy ( pData->_buffData.data,buffer->data,buffer->length );
@@ -556,7 +562,14 @@ namespace raspicam {
 
             if ( pData->pstate->shutterSpeed!=0 && pData->pstate->rpc_exposureMode == RASPICAM_EXPOSURE_FIXEDFPS)
                 mmal_port_parameter_set_uint32 ( pData->pstate->camera_component->control, MMAL_PARAMETER_SHUTTER_SPEED, pData->pstate->shutterSpeed ) ;
-            if ( hasGrabbed ) pData->Thcond.BroadCast(); //wake up waiting client
+
+            if ( hasGrabbed ) {
+                if ( pData->_userCallback ) {
+                    // TODO - add locking mechanism for the callback
+                    pData->_userCallback(pData->_userCallbackData);
+                }
+                pData->Thcond.BroadCast(); //wake up waiting client
+            }
 
         }
 

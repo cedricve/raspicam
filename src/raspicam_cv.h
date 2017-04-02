@@ -67,6 +67,12 @@ namespace raspicam {
         */
         void release();
 
+        /*
+         * the function 'userCallback' will be called every time new data arrived from camera,
+         * with 'data' as argument.
+         */
+        void setUserCallback(void (*userCallback)(void*) , void* data=0);
+
         /**
          * Grabs the next frame from video file or capturing device.
          */

@@ -73,10 +73,15 @@ namespace raspicam {
 
 
                 RASPIVID_STATE *pstate;            /// pointer to our state in case required in callback
-                 std::mutex _mutex;
+                std::mutex _mutex;
                 ThreadCondition Thcond;
                 bool wantToGrab;
                 membuf<unsigned char> _buffData;
+
+                /* User define callback interface */
+                void (*_userCallback)(void*) = 0;
+                void* _userCallbackData;
+
             };
 
             public:
@@ -102,6 +107,13 @@ namespace raspicam {
             /**Indicates if is capturing
              */
             bool isCapturing() const{return _isCapturing;}
+
+            /*
+             * the function 'userCallback' will be called every time new data arrived from camera,
+             * with 'data' as argument.
+             */
+            void setUserCallback(void (*userCallback)(void*) , void* data = 0);
+
             /**Grabs the next frame and keeps it in internal buffer. Blocks until next frame arrives
             */
             bool grab();
