@@ -1,4 +1,4 @@
-#RaspiCam: C++ API for using Raspberry camera (with OpenCV)
+# RaspiCam: C++ API for using Raspberry camera (with OpenCV)
 
 This library allows to use the Raspberry Pi Camera under BSD License. 
 
@@ -7,7 +7,7 @@ on this GIT repository by Cédric Verstraeten. Please note that is NOT the OFFIC
 
 This repository is used in the [Kerberos.io](https://github.com/kerberos-io) project.
 
-##Release notes
+## Release notes
 
 Update 2014/03/04: version 0.1.1 released Download at SourceForge
 Main feaure in 0.0.7 : Still camera API. You can now use the still mode for high resolution (includes OpenCv interface). See examples for more info.
