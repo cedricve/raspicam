@@ -54,6 +54,10 @@ namespace raspicam {
         return _impl->startCapture();
     }
 
+    void RaspiCam::setUserCallback(void (*userCallback)(void*) , void* data) {
+        _impl->setUserCallback(userCallback, data);
+    }
+
     bool RaspiCam::isOpened() const {return _impl->isOpened();}
 
     bool RaspiCam::grab() {

@@ -63,6 +63,13 @@ namespace raspicam {
         /**Makes camera start capturing
          */
         bool startCapture();
+
+        /*
+         * the function 'userCallback' will be called every time new data arrived from camera,
+         * with 'data' as argument.
+         */
+        void setUserCallback(void (*userCallback)(void*) , void* data=0);
+
         /**indicates if camera is open
         */
         bool isOpened() const ;

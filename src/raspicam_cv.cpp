@@ -73,6 +73,10 @@ namespace raspicam {
         return _impl->grab();
     }
 
+    void RaspiCam_Cv::setUserCallback(void (*userCallback)(void*) , void* data) {
+        _impl->setUserCallback(userCallback, data);
+    }
+
     /**
     *Decodes and returns the grabbed video frame.
      */
