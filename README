@@ -90,6 +90,7 @@ First create a file with the name simpletest_raspicam.cpp and add the following 
 /**
 */
 #include <ctime>
+#include <unistd.h>
 #include <fstream>
 #include <iostream>
 #include <raspicam/raspicam.h>
@@ -124,6 +125,7 @@ Now, create a file named CMakeLists.txt and add:
 #####################################
 cmake_minimum_required (VERSION 2.8) 
 project (raspicam_test)
+set (CMAKE_MODULE_PATH "/usr/local/lib/cmake/${CMAKE_MODULE_PATH}")
 find_package(raspicam REQUIRED)
 add_executable (simpletest_raspicam simpletest_raspicam.cpp)  
 target_link_libraries (simpletest_raspicam ${raspicam_LIBS})
