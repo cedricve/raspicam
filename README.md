@@ -88,7 +88,7 @@ You can learn how to use the library by taking a look at the examples in the uti
 	using namespace std;
 	 
 	int main ( int argc,char **argv ) {
-		raspicam::RaspiCam Camera; //Cmaera object
+		raspicam::RaspiCam Camera; //Camera object
 		//Open camera 
 		cout<<"Opening Camera..."<<endl;
 		if ( !Camera.open()) {cerr<<"Error opening camera"<<endl;return -1;}
