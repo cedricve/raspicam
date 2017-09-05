@@ -106,6 +106,7 @@ namespace raspicam {
             commitParameters();
             camera_video_port   = State.camera_component->output[MMAL_CAMERA_VIDEO_PORT];
             callback_data.pstate = &State;
+            callback_data.inst = this;
             // assign data to use for callback
             camera_video_port->userdata = ( struct MMAL_PORT_USERDATA_T * ) &callback_data;
             State.camera_component->control->userdata = ( struct MMAL_PORT_USERDATA_T * ) &callback_data;
@@ -257,10 +258,10 @@ namespace raspicam {
             }
 
             video_port = camera->output[MMAL_CAMERA_VIDEO_PORT];
-        
+
             //set sensor mode
-            if ( state->sensor_mode != 0 && mmal_port_parameter_set_uint32 ( camera->control, 
-                                                    MMAL_PARAMETER_CAMERA_CUSTOM_SENSOR_CONFIG, 
+            if ( state->sensor_mode != 0 && mmal_port_parameter_set_uint32 ( camera->control,
+                                                    MMAL_PARAMETER_CAMERA_CUSTOM_SENSOR_CONFIG,
                                                     state->sensor_mode)  != MMAL_SUCCESS)
             {
                 cerr << __func__ << ": Failed to set sensmode.";
@@ -536,8 +537,57 @@ namespace raspicam {
                 if( buffer->length &&
                         ( pData->_userCallback || pData->wantToGrab )){
                     mmal_buffer_header_mem_lock ( buffer );
-                    pData->_buffData.resize ( buffer->length );
-                    memcpy ( pData->_buffData.data,buffer->data,buffer->length );
+
+                    Private_Impl *self = pData->inst;
+
+                    int width = pData->pstate->width;
+                    int height = pData->pstate->height;
+                    RASPICAM_FORMAT fmt = pData->pstate->captureFtm;
+                    bool encoded = false; // So far only unencoded formats can be configured
+
+                    // For unencoded formats, the buffer is padding to blocks
+                    // TODO: According to picamera ('Under certain circumstances (non-resized, non-YUV, video-port captures), the resolution is rounded to 16x16 blocks instead of 32x16. Adjust your resolution rounding accordingly')
+                    int bufferWidth = VCOS_ALIGN_UP(width, 32);
+                    int bufferHeight = VCOS_ALIGN_UP(height, 16);
+
+                    if ( bufferWidth == width || encoded ) {
+                        pData->_buffData.resize ( buffer->length );
+                        memcpy ( pData->_buffData.data,buffer->data,buffer->length );
+                    }
+                    else {
+
+                        pData->_buffData.resize ( self->getImageTypeSize( fmt ) );
+
+                        int bpp = 1;
+                        if(fmt == RASPICAM_FORMAT_RGB || fmt == RASPICAM_FORMAT_BGR) {
+                            bpp = 3;
+                        }
+
+                        for(int i = 0; i < height; i++) {
+                            memcpy ( pData->_buffData.data + i*width*bpp, buffer->data + i*bufferWidth*bpp, width*bpp);
+                        }
+
+                        if ( fmt == RASPICAM_FORMAT_YUV420 ) {
+                            // Starting points in both buffers
+                            uint8_t *outUV = pData->_buffData.data + width*height;
+                            uint8_t *bufferUV = buffer->data + bufferHeight*bufferWidth;
+
+                            width /= 2;
+                            height /= 2;
+                            bufferWidth /= 2;
+                            bufferHeight /= 2;
+
+                            for(int plane = 0; plane < 2; plane++) {
+                                for(int i = 0; i < height; i++) {
+                                    memcpy ( outUV + i*width, bufferUV + i*bufferWidth, width );
+                                }
+                                outUV += width*height;
+                                bufferUV += bufferWidth*bufferHeight;
+                            }
+                        }
+
+                    }
+
                     pData->wantToGrab =false;
                     hasGrabbed=true;
                     mmal_buffer_header_mem_unlock ( buffer );
@@ -890,4 +940,3 @@ namespace raspicam {
         }
     };
 };
-

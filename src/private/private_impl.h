@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <mutex>
 #include <string>
 #include "raspicamtypes.h"
-#include "private_types.h" 
+#include "private_types.h"
 #include "threadcondition.h"
 namespace raspicam {
     namespace _private
@@ -73,6 +73,7 @@ namespace raspicam {
 
 
                 RASPIVID_STATE *pstate;            /// pointer to our state in case required in callback
+                Private_Impl *inst;
                 std::mutex _mutex;
                 ThreadCondition Thcond;
                 bool wantToGrab;
@@ -304,5 +305,3 @@ namespace raspicam {
 };
 
 #endif
-
-

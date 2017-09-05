@@ -34,6 +34,8 @@ RGB Mode
 BGR Mode
    - 1280x960: 14 fps,  640x480 : 29.29fps,  320x240 : 29.24fps
  
+Note: when using the full resolution video callbacks with the full resolution of the Raspberry Pi Camera v2, you will likely get an error such as `mmal: mmal_vc_port_enable: failed to enable port vc.ril.camera:out:1(BGR3): ENOSPC`. In order to fix this increase your GPU memory to at least 256MB.
+
 Color conversion is the most time consuming part. We still need to improve that part. Go to src/private and check if you can contribute!
  
 Note: the library is compiled with the options: -Wall -ffunction-sections  -fomit-frame-pointer -O2 -ffast-math -DNDEBUG -mcpu=arm1176jzf-s  -mfpu=vfp -mfloat-abi=hard -ftree-vectorize
