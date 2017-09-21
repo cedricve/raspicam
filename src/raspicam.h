@@ -146,6 +146,7 @@ namespace raspicam {
         void setHorizontalFlip ( bool hFlip );
         void setVerticalFlip ( bool vFlip );
         void setFrameRate ( int frames_per_second );
+        void setSensorMode ( int mode );
 
         //Accessors
         RASPICAM_FORMAT getFormat() const;
@@ -184,4 +185,3 @@ namespace raspicam {
     };
 };
 #endif
-

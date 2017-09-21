@@ -112,7 +112,7 @@ void processCommandLine ( int argc,char **argv,raspicam::RaspiCam &Camera ) {
 
     if ( findParam ( "-gr",argc,argv ) !=-1 )
       Camera.setFormat(raspicam::RASPICAM_FORMAT_GRAY);
-    if ( findParam ( "-yuv",argc,argv ) !=-1 ) 
+    if ( findParam ( "-yuv",argc,argv ) !=-1 )
       Camera.setFormat(raspicam::RASPICAM_FORMAT_YUV420);
     if ( findParam ( "-test_speed",argc,argv ) !=-1 )
         doTestSpeedOnly=true;
@@ -176,10 +176,21 @@ void saveImage ( string filepath,unsigned char *data,raspicam::RaspiCam &Camera 
     } else if ( Camera.getFormat()==raspicam::RASPICAM_FORMAT_GRAY ) {
         outFile<<"P5\n";
     } else if ( Camera.getFormat()==raspicam::RASPICAM_FORMAT_YUV420 ) { //made up format
-        outFile<<"P7\n";
+        // Openable as a .yuv format
+        outFile.write ( ( char* ) data,Camera.getImageBufferSize() );
+        return;
     }
     outFile<<Camera.getWidth() <<" "<<Camera.getHeight() <<" 255\n";
     outFile.write ( ( char* ) data,Camera.getImageBufferSize() );
+}
+
+string getExtension ( raspicam::RaspiCam &Camera ) {
+    if ( Camera.getFormat()==raspicam::RASPICAM_FORMAT_YUV420 ) {
+        return ".yuv";
+    }
+    else {
+        return ".ppm";
+    }
 }
 
 struct CallBackData_t{
@@ -202,7 +213,7 @@ void vidInCallback(void* data){
             std::stringstream fn;
             fn<<"image";
             if (camData->i<10) fn<<"0";
-            fn<<camData->i<<".ppm";
+            fn<<camData->i<<getExtension(*camData->Camera);
             saveImage ( fn.str(),camData->data,*(camData->Camera) );
             cerr<<"Saving "<<fn.str()<<endl;
         }
@@ -225,11 +236,11 @@ int main ( int argc,char **argv ) {
         return -1;
     }
 
-  
+
     raspicam::RaspiCam Camera;
     processCommandLine ( argc,argv,Camera );
     cout<<"Connecting to camera"<<endl;
-    
+
     if ( !Camera.open() ) {
         cerr<<"Error opening camera"<<endl;
         return -1;
@@ -267,7 +278,7 @@ int main ( int argc,char **argv ) {
                     std::stringstream fn;
                     fn<<"image";
                     if (i<10) fn<<"0";
-                    fn<<i<<".ppm";
+                    fn<<i<<getExtension(Camera);
                     saveImage ( fn.str(),data,Camera );
                     cerr<<"Saving "<<fn.str()<<endl;
                 }
@@ -275,7 +286,7 @@ int main ( int argc,char **argv ) {
         }while(++i<nFramesCaptured || nFramesCaptured==0);//stops when nFrames captured or at infinity lpif nFramesCaptured<0
     }
     timer.end();
-    if ( !doTestSpeedOnly )    cout<<endl<<"Images saved in imagexx.ppm"<<endl;
+    if ( !doTestSpeedOnly )    cout<<endl<<"Images saved in imagexx"<<getExtension(Camera)<<endl;
 
 
 

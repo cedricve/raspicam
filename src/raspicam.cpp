@@ -141,8 +141,12 @@ namespace raspicam {
     void RaspiCam::setFrameRate ( int frames_per_second ) {
         _impl->setFrameRate ( frames_per_second );
     }
+    void RaspiCam::setSensorMode ( int mode ) {
+        _impl->setSensorMode ( mode );
+    }
 
-    
+
+
     RASPICAM_FORMAT RaspiCam::getFormat()const{return _impl->getFormat( ); }
     unsigned int RaspiCam::getWidth() const{return _impl->getWidth() ;}
     unsigned int RaspiCam::getHeight() const{return _impl->getHeight()  ;}
@@ -171,4 +175,3 @@ namespace raspicam {
 
 
 };
-
