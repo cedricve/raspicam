@@ -43,7 +43,7 @@ namespace raspicam {
 
     namespace _private{
         class Private_Impl;
-    };
+    }
     /**Class for using Raspberry camera as in opencv
     */
     class RaspiCam_Cv {
@@ -116,7 +116,7 @@ namespace raspicam {
         int imgFormat;//required image format //
      };
 
-};
+}
 #endif
 
 

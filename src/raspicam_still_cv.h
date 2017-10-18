@@ -44,7 +44,7 @@ namespace raspicam {
 
     namespace _private{
         class Private_Impl_Still;
-    };
+    }
 
 
     /**Raspicam API for still camera

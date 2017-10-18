@@ -301,7 +301,7 @@ namespace raspicam {
 
 
         };
-    };
-};
+    }
+}
 
 #endif

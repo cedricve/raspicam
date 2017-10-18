@@ -163,7 +163,7 @@ namespace raspicam {
     float RaspiCam::getAWBG_red()const{return _impl->getAWBG_red();}
     float RaspiCam::getAWBG_blue()const{return _impl->getAWBG_blue();}
 
-    RASPICAM_IMAGE_EFFECT RaspiCam::getImageEffect() const{return _impl->getImageEffect() ;};
+    RASPICAM_IMAGE_EFFECT RaspiCam::getImageEffect() const{return _impl->getImageEffect() ;}
     RASPICAM_METERING RaspiCam::getMetering() const{return _impl->getMetering() ;}
     int RaspiCam::getFrameRate() const{return _impl->getFrameRate() ;}
     bool RaspiCam::isHorizontallyFlipped() const {return _impl->isHorizontallyFlipped()  ;}
@@ -174,4 +174,4 @@ namespace raspicam {
     std::string RaspiCam::getId() const{return _impl->getId();}
 
 
-};
+}
