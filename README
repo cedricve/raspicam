@@ -89,6 +89,7 @@ First create a file with the name simpletest_raspicam.cpp and add the following 
 
 /**
 */
+#include <unistd.h>
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -102,7 +103,7 @@ int main ( int argc,char **argv ) {
     if ( !Camera.open()) {cerr<<"Error opening camera"<<endl;return -1;}
     //wait a while until camera stabilizes
     cout<<"Sleeping for 3 secs"<<endl;
-    sleep(3);
+    usleep(3e6);
     //capture
     Camera.grab();
     //allocate memory
@@ -124,6 +125,7 @@ Now, create a file named CMakeLists.txt and add:
 #####################################
 cmake_minimum_required (VERSION 2.8) 
 project (raspicam_test)
+set(CMAKE_MODULE_PATH "/usr/local/lib/cmake/${CMAKE_MODULE_PATH}")
 find_package(raspicam REQUIRED)
 add_executable (simpletest_raspicam simpletest_raspicam.cpp)  
 target_link_libraries (simpletest_raspicam ${raspicam_LIBS})
