@@ -127,6 +127,6 @@ namespace raspicam {
         RASPICAM_ENCODING_RGB
     } RASPICAM_ENCODING;
 
-};
+}
 #endif
 

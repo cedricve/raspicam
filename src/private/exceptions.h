@@ -110,5 +110,5 @@ private:
     }
 };
 
-};
+}
 #endif

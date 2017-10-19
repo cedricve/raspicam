@@ -938,5 +938,5 @@ namespace raspicam {
            if ( mmal_port_parameter_set(State.camera_component->control, &param.hdr) != MMAL_SUCCESS )
                 cout << __func__ << ": Failed to set AWBG gains parameter.\n";
         }
-    };
-};
+    }
+}
