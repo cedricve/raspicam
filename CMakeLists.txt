@@ -200,7 +200,7 @@ IF(${CMAKE_SYSTEM_PROCESSOR} MATCHES armv6l ) ##BEAGLE BOARD
   SET(EXTRA_C_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE} -mcpu=arm1176jzf-s  -mfpu=vfp -mfloat-abi=hard -ftree-vectorize")  
 ENDIF()
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-pedantic -Werror -Wall -Wno-variadic-macros -std=c++0x -Wl,--no-as-needed")#for using condition variables
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-pedantic -Wall -Wno-variadic-macros -std=c++0x -Wl,--no-as-needed")#for using condition variables
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_C_FLAGS} ")
 SET(CMAKE_CXX_FLAGS_RELEASE "${EXTRA_C_FLAGS_RELEASE}  -lpthread")
 SET(CMAKE_CXX_FLAGS_DEBUG "${EXTRA_C_FLAGS_DEBUG}  -lpthread")
