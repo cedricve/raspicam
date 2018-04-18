@@ -86,33 +86,33 @@ namespace raspicam {
 
         switch ( propId ) {
 
-        case CV_CAP_PROP_FRAME_WIDTH :
+        case cv::CAP_PROP_FRAME_WIDTH :
             return _impl->getWidth();
-        case CV_CAP_PROP_FRAME_HEIGHT :
+        case cv::CAP_PROP_FRAME_HEIGHT :
             return _impl->getHeight();
-        case CV_CAP_PROP_FPS:
+        case cv::CAP_PROP_FPS:
             return 30;
-        case CV_CAP_PROP_FORMAT :
+        case cv::CAP_PROP_FORMAT :
             return CV_8UC3;
-        case CV_CAP_PROP_MODE :
+        case cv::CAP_PROP_MODE :
             return 0;
-        case CV_CAP_PROP_BRIGHTNESS :
+        case cv::CAP_PROP_BRIGHTNESS :
             return _impl->getBrightness();
-        case CV_CAP_PROP_CONTRAST :
+        case cv::CAP_PROP_CONTRAST :
             return Scaler::scale ( -100,100,0,100,  _impl->getContrast() );
-        case CV_CAP_PROP_SATURATION :
+        case cv::CAP_PROP_SATURATION :
             return  Scaler::scale ( -100,100,0,100, _impl->getSaturation() );;
-//     case CV_CAP_PROP_HUE : return _cam_impl->getSharpness();
-        case CV_CAP_PROP_GAIN :
+//     case cv::CAP_PROP_HUE : return _cam_impl->getSharpness();
+        case cv::CAP_PROP_GAIN :
             return  Scaler::scale ( 0,800,0,100, _impl->getISO() );
-        case CV_CAP_PROP_EXPOSURE :
+        case cv::CAP_PROP_EXPOSURE :
 //             if ( _impl->getShutterSpeed() ==0 )
             return -1;//not yet
 //             else return Scaler::scale (0,330000, 0,100, _impl->getShutterSpeed() )  ;
             break;
-        case CV_CAP_PROP_CONVERT_RGB :
+        case cv::CAP_PROP_CONVERT_RGB :
             return ( true );
-//     case CV_CAP_PROP_WHITE_BALANCE :return _cam_impl->getAWB();
+//     case cv::CAP_PROP_WHITE_BALANCE :return _cam_impl->getAWB();
         default :
             return -1;
         };
@@ -125,41 +125,41 @@ namespace raspicam {
 
         switch ( propId ) {
 
-        case CV_CAP_PROP_FRAME_WIDTH :
+        case cv::CAP_PROP_FRAME_WIDTH :
             if ( value!=_impl->getWidth() ) {
                 delete image_buffer;
                 image_buffer=0;
                 _impl->setWidth ( value );
             }
             break;
-        case CV_CAP_PROP_FRAME_HEIGHT :
+        case cv::CAP_PROP_FRAME_HEIGHT :
             if ( value!=_impl->getHeight() ) {
                 delete image_buffer;
                 image_buffer=0;
                 _impl->setHeight ( value );
             }
             break;
-        case CV_CAP_PROP_FORMAT : {
+        case cv::CAP_PROP_FORMAT : {
             return false;		//ONLY 8UC3 allowed at this moment
         }
         break;
-        case CV_CAP_PROP_MODE ://nothing to  do yet
+        case cv::CAP_PROP_MODE ://nothing to  do yet
             return false;
             break;
-        case CV_CAP_PROP_BRIGHTNESS :
+        case cv::CAP_PROP_BRIGHTNESS :
             _impl->setBrightness ( value );
             break;
-        case CV_CAP_PROP_CONTRAST :
+        case cv::CAP_PROP_CONTRAST :
             _impl->setContrast ( Scaler::scale ( 0,100,-100,100, value ) );
             break;
-        case CV_CAP_PROP_SATURATION :
+        case cv::CAP_PROP_SATURATION :
             _impl->setSaturation ( Scaler::scale ( 0,100,-100,100, value ) );
             break;
-//     case CV_CAP_PROP_HUE : return _cam_impl->getSharpness();
-        case CV_CAP_PROP_GAIN :
+//     case cv::CAP_PROP_HUE : return _cam_impl->getSharpness();
+        case cv::CAP_PROP_GAIN :
             _impl->setISO ( Scaler::scale ( 0,100,0,800, value ) );
             break;
-        case CV_CAP_PROP_EXPOSURE :
+        case cv::CAP_PROP_EXPOSURE :
 //             if ( value>0 && value<=100 ) {
 //                 _impl->setShutterSpeed ( Scaler::scale ( 0,100,0,330000, value ) );
 //             } else {
@@ -167,10 +167,10 @@ namespace raspicam {
 //                 _impl->setShutterSpeed ( 0 );
 //             }
             break;
-        case CV_CAP_PROP_CONVERT_RGB :
+        case cv::CAP_PROP_CONVERT_RGB :
 //              CV_8UC3;
             break;
-//     case CV_CAP_PROP_WHITE_BALANCE :return _cam_impl->getAWB();
+//     case cv::CAP_PROP_WHITE_BALANCE :return _cam_impl->getAWB();
         default :
             return false;
         };

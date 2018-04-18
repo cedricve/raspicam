@@ -65,19 +65,19 @@ float getParamVal ( string param,int argc,char **argv,float defvalue=-1 ) {
 }
 
 void processCommandLine ( int argc,char **argv,raspicam::RaspiCam_Cv &Camera ) {
-    Camera.set ( CV_CAP_PROP_FRAME_WIDTH,  getParamVal ( "-w",argc,argv,1280 ) );
-    Camera.set ( CV_CAP_PROP_FRAME_HEIGHT, getParamVal ( "-h",argc,argv,960 ) );
-    Camera.set ( CV_CAP_PROP_BRIGHTNESS,getParamVal ( "-br",argc,argv,50 ) );
-    Camera.set ( CV_CAP_PROP_CONTRAST ,getParamVal ( "-co",argc,argv,50 ) );
-    Camera.set ( CV_CAP_PROP_SATURATION, getParamVal ( "-sa",argc,argv,50 ) );
-    Camera.set ( CV_CAP_PROP_GAIN, getParamVal ( "-g",argc,argv ,50 ) );
-    Camera.set ( CV_CAP_PROP_FPS, getParamVal ( "-fps",argc,argv, 0 ) );
+    Camera.set ( cv::CAP_PROP_FRAME_WIDTH,  getParamVal ( "-w",argc,argv,1280 ) );
+    Camera.set ( cv::CAP_PROP_FRAME_HEIGHT, getParamVal ( "-h",argc,argv,960 ) );
+    Camera.set ( cv::CAP_PROP_BRIGHTNESS,getParamVal ( "-br",argc,argv,50 ) );
+    Camera.set ( cv::CAP_PROP_CONTRAST ,getParamVal ( "-co",argc,argv,50 ) );
+    Camera.set ( cv::CAP_PROP_SATURATION, getParamVal ( "-sa",argc,argv,50 ) );
+    Camera.set ( cv::CAP_PROP_GAIN, getParamVal ( "-g",argc,argv ,50 ) );
+    Camera.set ( cv::CAP_PROP_FPS, getParamVal ( "-fps",argc,argv, 0 ) );
     if ( findParam ( "-gr",argc,argv ) !=-1 )
-        Camera.set ( CV_CAP_PROP_FORMAT, CV_8UC1 );
+        Camera.set ( cv::CAP_PROP_FORMAT, CV_8UC1 );
     if ( findParam ( "-test_speed",argc,argv ) !=-1 )
         doTestSpeedOnly=true;
     if ( findParam ( "-ss",argc,argv ) !=-1 )
-        Camera.set ( CV_CAP_PROP_EXPOSURE, getParamVal ( "-ss",argc,argv )  );
+        Camera.set ( cv::CAP_PROP_EXPOSURE, getParamVal ( "-ss",argc,argv )  );
 
 
 //     Camera.setSharpness ( getParamVal ( "-sh",argc,argv,0 ) );
