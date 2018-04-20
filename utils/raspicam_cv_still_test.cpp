@@ -64,8 +64,8 @@ int main ( int argc, char *argv[] ) {
     int width = getParamVal ( "-w",argc,argv,2592 );//define width
     int height =getParamVal ( "-h",argc,argv,1944 );//define height
     cout << "Initializing ..."<<width<<"x"<<height<<endl;
-    Camera.set ( CV_CAP_PROP_FRAME_WIDTH, width );
-    Camera.set ( CV_CAP_PROP_FRAME_HEIGHT, height );
+    Camera.set ( cv::CAP_PROP_FRAME_WIDTH, width );
+    Camera.set ( cv::CAP_PROP_FRAME_HEIGHT, height );
     Camera.open();
     cv::Mat image;
     cout<<"capturing"<<endl;
