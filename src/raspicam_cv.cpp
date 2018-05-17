@@ -199,6 +199,14 @@ namespace raspicam {
 		_impl->setVideoStabilization ( enable );
 	}
 	
+	void RaspiCam_Cv::setHorizontalFlip ( bool enable ) {
+		_impl->setHorizontalFlip ( enable );
+	}
+	
+	void RaspiCam_Cv::setVerticalFlip ( bool enable ) {
+		_impl->setVerticalFlip ( enable );
+	}
+	
     std::string RaspiCam_Cv::getId() const{
         return _impl->getId();
     }

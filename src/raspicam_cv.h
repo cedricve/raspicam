@@ -122,6 +122,14 @@ namespace raspicam {
 		/** Enable or disable video stabilization
 		*/
         void setVideoStabilization ( bool enable );
+		
+		/** Enable or disable horizontal flip
+		*/
+		void setHorizontalFlip ( bool enable );
+		
+		/** Enable or disable vertical flip
+		*/
+		void setVerticalFlip ( bool enable );
 
         /** Returns the camera identifier. We assume the camera id is the one of the raspberry obtained using raspberry serial number obtained in /proc/cpuinfo
          */
