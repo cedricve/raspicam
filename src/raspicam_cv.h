@@ -130,6 +130,10 @@ namespace raspicam {
 		/** Enable or disable vertical flip
 		*/
 		void setVerticalFlip ( bool enable );
+		
+		/** Set exposure compensation. -10,10
+		*/
+		void setExposureCompensation( int value );
 
         /** Returns the camera identifier. We assume the camera id is the one of the raspberry obtained using raspberry serial number obtained in /proc/cpuinfo
          */

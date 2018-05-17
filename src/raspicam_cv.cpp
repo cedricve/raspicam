@@ -207,6 +207,12 @@ namespace raspicam {
 		_impl->setVerticalFlip ( enable );
 	}
 	
+	void RaspiCam_Cv::setExposureCompensation ( int value ) {
+		// clamp to [-10; 10]
+		int clamped = std::max(-10, std::min(value, 10));
+		_impl->setExposureCompensation ( clamped );
+	}
+	
     std::string RaspiCam_Cv::getId() const{
         return _impl->getId();
     }
