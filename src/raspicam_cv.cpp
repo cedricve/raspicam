@@ -180,8 +180,12 @@ namespace raspicam {
             return false;
         };
         return true;
-
     }
+	
+	bool RaspiCam_Cv::setRotation ( int degrees ) {
+		_impl->setRotation ( degrees );
+	}
+	
     std::string RaspiCam_Cv::getId() const{
         return _impl->getId();
     }
