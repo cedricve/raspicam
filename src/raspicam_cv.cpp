@@ -191,7 +191,7 @@ namespace raspicam {
 	
 	void RaspiCam_Cv::setImageEffect ( int nEffect ) {
 		// Clamp to enum
-		int clamped = std::max(RASPICAM_IMAGE_EFFECT::RASPICAM_IMAGE_EFFECT_NONE, std::min(nEffect, RASPICAM_IMAGE_EFFECT::RASPICAM_IMAGE_EFFECT_CARTOON));
+		int clamped = std::max((int)RASPICAM_IMAGE_EFFECT::RASPICAM_IMAGE_EFFECT_NONE, std::min(nEffect, (int)RASPICAM_IMAGE_EFFECT::RASPICAM_IMAGE_EFFECT_CARTOON));
 		_impl->setImageEffect ( (RASPICAM_IMAGE_EFFECT)clamped );
 	}
 	
