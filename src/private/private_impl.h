@@ -142,8 +142,11 @@ namespace raspicam {
             //sets sensor mode. Can not be changed once camera is opened
             void setSensorMode ( int mode );
 
+            //sets width. Can not be changed once camera is opened
             void setWidth ( unsigned int width ) ;
+            //sets height. Can not be changed once camera is opened
             void setHeight ( unsigned int height );
+            //sets capture size. Can not be changed once camera is opened
             void setCaptureSize ( unsigned int width, unsigned int height );
             void setBrightness ( unsigned int brightness );
             void setRotation ( int rotation );
@@ -166,6 +169,7 @@ namespace raspicam {
               *There is currently an upper limit of approximately 330000us (330ms, 0.33s) past which operation is undefined.
               */
             void setShutterSpeed ( unsigned int shutter ); //currently not  supported
+            //sets frame rate. Can not be changed once camera is opened
             void setFrameRate ( int fps );
 
             RASPICAM_FORMAT  getFormat() const {return State.captureFtm;}

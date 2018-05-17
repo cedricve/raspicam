@@ -134,6 +134,10 @@ namespace raspicam {
 		/** Set exposure compensation. -10,10
 		*/
 		void setExposureCompensation( int value );
+		
+		/** Sets auto white balance. See RASPICAM_AWB enum. 9 values as of current implementation.
+		*/
+        void setAWB ( int nEnumValue );
 
         /** Returns the camera identifier. We assume the camera id is the one of the raspberry obtained using raspberry serial number obtained in /proc/cpuinfo
          */

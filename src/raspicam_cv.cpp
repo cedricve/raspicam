@@ -213,6 +213,12 @@ namespace raspicam {
 		_impl->setExposureCompensation ( clamped );
 	}
 	
+	void RaspiCam_Cv::setAWB ( int nEnumValue ) {
+		// Clamp to enum
+		int clamped = std::max((int)RASPICAM_AWB::RASPICAM_AWB_OFF, std::min(nEnumValue, (int)RASPICAM_AWB::RASPICAM_AWB_HORIZON));
+		_impl->setAWB ( (RASPICAM_AWB)clamped );
+	}
+	
     std::string RaspiCam_Cv::getId() const{
         return _impl->getId();
     }
