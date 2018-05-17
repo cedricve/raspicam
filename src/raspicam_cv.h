@@ -114,6 +114,10 @@ namespace raspicam {
 		3: 270 degrees clockwise		
 		*/
         void setRotation ( int nRotation );
+		
+		/** Sets the image effect. See RASPICAM_IMAGE_EFFECT enum. 19 values as of current implementation.
+		*/
+        void setImageEffect ( int nEffect );
 
         /** Returns the camera identifier. We assume the camera id is the one of the raspberry obtained using raspberry serial number obtained in /proc/cpuinfo
          */
