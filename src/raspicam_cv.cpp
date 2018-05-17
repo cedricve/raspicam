@@ -186,7 +186,7 @@ namespace raspicam {
 		// input is [0;3], map to [0; 360]
 		int clamped = std::max(0, std::min(nRotation, 3));
 		int degrees = clamped * 90;
-		_impl->setRotation ( clamped );
+		_impl->setRotation ( degrees );
 	}
 	
     std::string RaspiCam_Cv::getId() const{
