@@ -138,6 +138,10 @@ namespace raspicam {
 		/** Sets auto white balance. See RASPICAM_AWB enum. 9 values as of current implementation.
 		*/
         void setAWB ( int nEnumValue );
+		
+		/** Sets metering type. See RASPICAM_METERING enum. 4 values as of current implementation.
+		*/
+		void setMetering ( int nEnumValue );
 
         /** Returns the camera identifier. We assume the camera id is the one of the raspberry obtained using raspberry serial number obtained in /proc/cpuinfo
          */

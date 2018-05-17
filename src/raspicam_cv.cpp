@@ -219,6 +219,12 @@ namespace raspicam {
 		_impl->setAWB ( (RASPICAM_AWB)clamped );
 	}
 	
+	void RaspiCam_Cv::setMetering ( int nEnumValue ) {
+		// Clamp to enum
+		int clamped = std::max((int)RASPICAM_METERING::RASPICAM_METERING_AVERAGE, std::min(nEnumValue, (int)RASPICAM_METERING::RASPICAM_METERING_MATRIX));
+		_impl->setMetering ( (RASPICAM_METERING)clamped );
+	}
+	
     std::string RaspiCam_Cv::getId() const{
         return _impl->getId();
     }
