@@ -118,6 +118,10 @@ namespace raspicam {
 		/** Sets the image effect. See RASPICAM_IMAGE_EFFECT enum. 19 values as of current implementation.
 		*/
         void setImageEffect ( int nEffect );
+		
+		/** Enable or disable video stabilization
+		*/
+        void setVideoStabilization ( bool enable );
 
         /** Returns the camera identifier. We assume the camera id is the one of the raspberry obtained using raspberry serial number obtained in /proc/cpuinfo
          */

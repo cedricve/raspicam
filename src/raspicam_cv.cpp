@@ -195,6 +195,10 @@ namespace raspicam {
 		_impl->setImageEffect ( (RASPICAM_IMAGE_EFFECT)clamped );
 	}
 	
+	void RaspiCam_Cv::setVideoStabilization ( bool enable ) {
+		_impl->setVideoStabilization ( enable );
+	}
+	
     std::string RaspiCam_Cv::getId() const{
         return _impl->getId();
     }
