@@ -182,7 +182,7 @@ namespace raspicam {
         return true;
     }
 	
-	bool RaspiCam_Cv::setRotation ( int degrees ) {
+	void RaspiCam_Cv::setRotation ( int degrees ) {
 		_impl->setRotation ( degrees );
 	}
 	
