@@ -107,7 +107,13 @@ namespace raspicam {
 
         bool set ( int propId, double value );
 		
-        void setRotation ( int degrees );
+		/** Sets the rotation
+		0: none
+		1: 90 degrees clockwise
+		2: 180 degrees
+		3: 270 degrees clockwise		
+		*/
+        void setRotation ( int nRotation );
 
         /** Returns the camera identifier. We assume the camera id is the one of the raspberry obtained using raspberry serial number obtained in /proc/cpuinfo
          */

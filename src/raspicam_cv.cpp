@@ -182,7 +182,9 @@ namespace raspicam {
         return true;
     }
 	
-	void RaspiCam_Cv::setRotation ( int degrees ) {
+	void RaspiCam_Cv::setRotation ( int nRotation ) {
+		// input is [0;3], map to [0; 360]
+		int degrees = std::clamp(nRotation, 0, 3) * 90;
 		_impl->setRotation ( degrees );
 	}
 	
