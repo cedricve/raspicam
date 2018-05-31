@@ -180,8 +180,51 @@ namespace raspicam {
             return false;
         };
         return true;
-
     }
+	
+	void RaspiCam_Cv::setRotation ( int nRotation ) {
+		// input is [0;3], map to [0; 360]
+		int clamped = std::max(0, std::min(nRotation, 3));
+		int degrees = clamped * 90;
+		_impl->setRotation ( degrees );
+	}
+	
+	void RaspiCam_Cv::setImageEffect ( int nEffect ) {
+		// Clamp to enum
+		int clamped = std::max((int)RASPICAM_IMAGE_EFFECT::RASPICAM_IMAGE_EFFECT_NONE, std::min(nEffect, (int)RASPICAM_IMAGE_EFFECT::RASPICAM_IMAGE_EFFECT_CARTOON));
+		_impl->setImageEffect ( (RASPICAM_IMAGE_EFFECT)clamped );
+	}
+	
+	void RaspiCam_Cv::setVideoStabilization ( bool enable ) {
+		_impl->setVideoStabilization ( enable );
+	}
+	
+	void RaspiCam_Cv::setHorizontalFlip ( bool enable ) {
+		_impl->setHorizontalFlip ( enable );
+	}
+	
+	void RaspiCam_Cv::setVerticalFlip ( bool enable ) {
+		_impl->setVerticalFlip ( enable );
+	}
+	
+	void RaspiCam_Cv::setExposureCompensation ( int value ) {
+		// clamp to [-10; 10]
+		int clamped = std::max(-10, std::min(value, 10));
+		_impl->setExposureCompensation ( clamped );
+	}
+	
+	void RaspiCam_Cv::setAWB ( int nEnumValue ) {
+		// Clamp to enum
+		int clamped = std::max((int)RASPICAM_AWB::RASPICAM_AWB_OFF, std::min(nEnumValue, (int)RASPICAM_AWB::RASPICAM_AWB_HORIZON));
+		_impl->setAWB ( (RASPICAM_AWB)clamped );
+	}
+	
+	void RaspiCam_Cv::setMetering ( int nEnumValue ) {
+		// Clamp to enum
+		int clamped = std::max((int)RASPICAM_METERING::RASPICAM_METERING_AVERAGE, std::min(nEnumValue, (int)RASPICAM_METERING::RASPICAM_METERING_MATRIX));
+		_impl->setMetering ( (RASPICAM_METERING)clamped );
+	}
+	
     std::string RaspiCam_Cv::getId() const{
         return _impl->getId();
     }
