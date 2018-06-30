@@ -47,6 +47,7 @@ namespace raspicam {
         RASPICAM_FORMAT_GRAY,
         RASPICAM_FORMAT_BGR,
         RASPICAM_FORMAT_RGB,
+        RASPICAM_FORMAT_RGBA,
         RASPICAM_FORMAT_IGNORE //do not use
     };
 
