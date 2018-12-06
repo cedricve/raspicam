@@ -5,12 +5,15 @@ SET(private_still_hdrs_base "private_still/private_still_types.h  private/privat
 SET(public_hdrs_base
     raspicamtypes.h
     raspicam.h
+    raspicamrawbuffer.h
 )
 
 SET(srcs_base
     raspicam.cpp
     raspicam_still.cpp
+    raspicamrawbuffer.cpp
     private/private_impl.cpp
+    private/raspicamrawbuffer_impl.cpp
     private/threadcondition.cpp
     private_still/private_still_impl.cpp
 )
