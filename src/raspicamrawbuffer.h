@@ -87,6 +87,12 @@ namespace raspicam {
         void* getBuffer();
 
         /**
+         * Get buffer contents, constant implementation.
+         * @return buffer contents.
+         */
+        const void* getBuffer() const;
+
+        /**
          * Lock buffer's memory.
          */
         void lock();

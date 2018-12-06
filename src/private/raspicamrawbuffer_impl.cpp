@@ -62,6 +62,10 @@ namespace raspicam {
             return _buffer->data;
         }
 
+        const void* RaspiCamRawBufferImpl::getBuffer() const {
+            return _buffer->data;
+        }
+
         void RaspiCamRawBufferImpl::lock() {
             if (_buffer) {
                 mmal_buffer_header_mem_lock(_buffer);
