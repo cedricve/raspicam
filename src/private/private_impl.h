@@ -261,6 +261,8 @@ namespace raspicam {
             private:
             static void video_buffer_callback ( MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer );
             static void camera_control_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer);
+            static void process_video_buffer(PORT_USERDATA *pData, MMAL_BUFFER_HEADER_T *buffer);
+
             void setDefaultStateParams();
             MMAL_COMPONENT_T *create_camera_component ( RASPIVID_STATE *state );
             void destroy_camera_component ( RASPIVID_STATE *state );
@@ -302,8 +304,6 @@ namespace raspicam {
             bool _isCapturing;
 
             bool _rgb_bgr_fixed;
-
-
         };
     }
 }

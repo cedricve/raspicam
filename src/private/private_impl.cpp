@@ -41,6 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mmal/util/mmal_util.h"
 #include "mmal/util/mmal_util_params.h"
 #include "mmal/util/mmal_default_components.h"
+
 using namespace std;
 namespace raspicam {
     namespace _private{
@@ -534,63 +535,19 @@ namespace raspicam {
 //            pData->_mutex.lock();
              std::unique_lock<std::mutex> lck ( pData->_mutex );
             if ( pData ) {
-                if( buffer->length &&
-                        ( pData->_userCallback || pData->wantToGrab )){
+
+                bool processingRequired =
+                        pData->wantToGrab ||
+                        pData->_userCallback;
+
+                if(buffer->length && processingRequired){
+
                     mmal_buffer_header_mem_lock ( buffer );
-
-                    Private_Impl *self = pData->inst;
-
-                    int width = pData->pstate->width;
-                    int height = pData->pstate->height;
-                    RASPICAM_FORMAT fmt = pData->pstate->captureFtm;
-                    bool encoded = false; // So far only unencoded formats can be configured
-
-                    // For unencoded formats, the buffer is padding to blocks
-                    // TODO: According to picamera ('Under certain circumstances (non-resized, non-YUV, video-port captures), the resolution is rounded to 16x16 blocks instead of 32x16. Adjust your resolution rounding accordingly')
-                    int bufferWidth = VCOS_ALIGN_UP(width, 32);
-                    int bufferHeight = VCOS_ALIGN_UP(height, 16);
-
-                    if ( bufferWidth == width || encoded ) {
-                        pData->_buffData.resize ( buffer->length );
-                        memcpy ( pData->_buffData.data,buffer->data,buffer->length );
-                    }
-                    else {
-
-                        pData->_buffData.resize ( self->getImageTypeSize( fmt ) );
-
-                        int bpp = 1;
-                        if(fmt == RASPICAM_FORMAT_RGB || fmt == RASPICAM_FORMAT_BGR) {
-                            bpp = 3;
-                        }
-
-                        for(int i = 0; i < height; i++) {
-                            memcpy ( pData->_buffData.data + i*width*bpp, buffer->data + i*bufferWidth*bpp, width*bpp);
-                        }
-
-                        if ( fmt == RASPICAM_FORMAT_YUV420 ) {
-                            // Starting points in both buffers
-                            uint8_t *outUV = pData->_buffData.data + width*height;
-                            uint8_t *bufferUV = buffer->data + bufferHeight*bufferWidth;
-
-                            width /= 2;
-                            height /= 2;
-                            bufferWidth /= 2;
-                            bufferHeight /= 2;
-
-                            for(int plane = 0; plane < 2; plane++) {
-                                for(int i = 0; i < height; i++) {
-                                    memcpy ( outUV + i*width, bufferUV + i*bufferWidth, width );
-                                }
-                                outUV += width*height;
-                                bufferUV += bufferWidth*bufferHeight;
-                            }
-                        }
-
-                    }
+                    process_video_buffer(pData, buffer);
+                    mmal_buffer_header_mem_unlock ( buffer );
 
                     pData->wantToGrab =false;
                     hasGrabbed=true;
-                    mmal_buffer_header_mem_unlock ( buffer );
                 }
             }
             //pData->_mutex.unlock();
@@ -623,7 +580,56 @@ namespace raspicam {
 
         }
 
+        void Private_Impl::process_video_buffer(Private_Impl::PORT_USERDATA *pData,
+                                                MMAL_BUFFER_HEADER_T *buffer) {
+            Private_Impl *self = pData->inst;
 
+            int width = pData->pstate->width;
+            int height = pData->pstate->height;
+            RASPICAM_FORMAT fmt = pData->pstate->captureFtm;
+            bool encoded = false; // So far only unencoded formats can be configured
+
+            // For unencoded formats, the buffer is padding to blocks
+            // TODO: According to picamera ('Under certain circumstances (non-resized, non-YUV, video-port captures), the resolution is rounded to 16x16 blocks instead of 32x16. Adjust your resolution rounding accordingly')
+            int bufferWidth = VCOS_ALIGN_UP(width, 32);
+            int bufferHeight = VCOS_ALIGN_UP(height, 16);
+
+            if ( bufferWidth == width || encoded ) {
+                pData->_buffData.resize ( buffer->length );
+                memcpy ( pData->_buffData.data,buffer->data,buffer->length );
+            } else {
+
+                pData->_buffData.resize ( self->getImageTypeSize( fmt ) );
+
+                int bpp = 1;
+                if(fmt == RASPICAM_FORMAT_RGB || fmt == RASPICAM_FORMAT_BGR) {
+                    bpp = 3;
+                }
+
+                for(int i = 0; i < height; i++) {
+                    memcpy ( pData->_buffData.data + i*width*bpp, buffer->data + i*bufferWidth*bpp, width*bpp);
+                }
+
+                if ( fmt == RASPICAM_FORMAT_YUV420 ) {
+                    // Starting points in both buffers
+                    uint8_t *outUV = pData->_buffData.data + width*height;
+                    uint8_t *bufferUV = buffer->data + bufferHeight*bufferWidth;
+
+                    width /= 2;
+                    height /= 2;
+                    bufferWidth /= 2;
+                    bufferHeight /= 2;
+
+                    for(int plane = 0; plane < 2; plane++) {
+                        for(int i = 0; i < height; i++) {
+                            memcpy ( outUV + i*width, bufferUV + i*bufferWidth, width );
+                        }
+                        outUV += width*height;
+                        bufferUV += bufferWidth*bufferHeight;
+                    }
+                }
+            }
+        }
 
         void Private_Impl::setWidth ( unsigned int width ) {
             State.width = width;
