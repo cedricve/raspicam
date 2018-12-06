@@ -16,8 +16,12 @@ namespace raspicam {
 
         void RaspiCamRawBufferImpl::construct(const raspicam::_private::RaspiCamRawBufferImpl &src) {
             _buffer = const_cast<MMAL_BUFFER_HEADER_T*>(src._buffer);
-            _acquired = true;
-            mmal_buffer_header_acquire(_buffer);
+            if (_buffer) {
+                _acquired = true;
+                mmal_buffer_header_acquire(_buffer);
+            } else {
+                _acquired = false;
+            }
         }
 
         void RaspiCamRawBufferImpl::dispose() {
