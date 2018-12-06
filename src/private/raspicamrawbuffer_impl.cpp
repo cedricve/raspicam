@@ -59,11 +59,11 @@ namespace raspicam {
         }
 
         void* RaspiCamRawBufferImpl::getBuffer() {
-            return _buffer->data;
+            return _buffer ? _buffer->data : 0;
         }
 
         const void* RaspiCamRawBufferImpl::getBuffer() const {
-            return _buffer->data;
+            return _buffer ? _buffer->data : 0;
         }
 
         void RaspiCamRawBufferImpl::lock() {
