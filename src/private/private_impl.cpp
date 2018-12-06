@@ -41,6 +41,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mmal/util/mmal_util.h"
 #include "mmal/util/mmal_util_params.h"
 #include "mmal/util/mmal_default_components.h"
+#include "raspicamrawbuffer.h"
+#include "raspicamrawbuffer_impl.h"
 
 using namespace std;
 namespace raspicam {
@@ -149,6 +151,12 @@ namespace raspicam {
         void Private_Impl::setUserCallback(void (*userCallback)(void*) , void* data){
             callback_data._userCallbackData = data;
             callback_data._userCallback = userCallback;
+        }
+
+        void Private_Impl::setRawBufferCallback(void (* userCallback)(const raspicam::RaspiCamRawBuffer &, void *),
+                                                void *data) {
+            callback_data._userCallbackData = data;
+            callback_data._userRawBufferCallback = userCallback;
         }
 
         void Private_Impl::release() {
@@ -538,13 +546,23 @@ namespace raspicam {
 
                 bool processingRequired =
                         pData->wantToGrab ||
-                        pData->_userCallback;
+                        pData->_userCallback ||
+                        pData->_userRawBufferCallback;
 
                 if(buffer->length && processingRequired){
 
-                    mmal_buffer_header_mem_lock ( buffer );
-                    process_video_buffer(pData, buffer);
-                    mmal_buffer_header_mem_unlock ( buffer );
+                    if (pData->_userRawBufferCallback) {
+                        RaspiCamRawBuffer rawBuffer;
+
+                        // Setup buffer but don't acquire it,
+                        // for it is already acquired and to be released a bit below.
+                        rawBuffer.accessImpl()->setMmalBufferHeader(buffer, false);
+                        pData->_userRawBufferCallback(rawBuffer, pData->_userCallbackData);
+                    } else {
+                        mmal_buffer_header_mem_lock ( buffer );
+                        process_video_buffer(pData, buffer);
+                        mmal_buffer_header_mem_unlock ( buffer );
+                    }
 
                     pData->wantToGrab =false;
                     hasGrabbed=true;

@@ -44,7 +44,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "raspicamtypes.h"
 #include "private_types.h"
 #include "threadcondition.h"
+
 namespace raspicam {
+    class RaspiCamRawBuffer;
     namespace _private
     {
 
@@ -81,6 +83,7 @@ namespace raspicam {
 
                 /* User define callback interface */
                 void (*_userCallback)(void*) = 0;
+                void (*_userRawBufferCallback)(const RaspiCamRawBuffer&, void*) = 0;
                 void* _userCallbackData;
 
             };
@@ -114,6 +117,14 @@ namespace raspicam {
              * with 'data' as argument.
              */
             void setUserCallback(void (*userCallback)(void*) , void* data = 0);
+
+            /**
+             * Specify callback which is called every time when new camera raw buffer is
+             * obtained.
+             * @param userCallback callback function
+             * @param data user data you want to pass into callback.
+             */
+            void setRawBufferCallback(void (*userCallback)(const RaspiCamRawBuffer&, void*) , void* data=0);
 
             /**Grabs the next frame and keeps it in internal buffer. Blocks until next frame arrives
             */
