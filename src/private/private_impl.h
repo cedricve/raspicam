@@ -83,7 +83,10 @@ namespace raspicam {
 
                 /* User define callback interface */
                 void (*_userCallback)(void*) = 0;
+
                 void (*_userRawBufferCallback)(const RaspiCamRawBuffer&, void*) = 0;
+                uint32_t _numRawBuffersUsedByClient;
+
                 void* _userCallbackData;
 
             };

@@ -51,6 +51,7 @@ namespace raspicam {
 #define MMAL_CAMERA_CAPTURE_PORT 2
 #define VIDEO_FRAME_RATE_DEN 1
 #define VIDEO_OUTPUT_BUFFERS_NUM 3
+#define NUM_RAW_BUFFERS_USED_BY_CLIENT_DEFAULT 2
 
 
         Private_Impl::Private_Impl() {
@@ -157,6 +158,7 @@ namespace raspicam {
                                                 void *data) {
             callback_data._userCallbackData = data;
             callback_data._userRawBufferCallback = userCallback;
+            callback_data._numRawBuffersUsedByClient = NUM_RAW_BUFFERS_USED_BY_CLIENT_DEFAULT;
         }
 
         void Private_Impl::release() {
@@ -355,7 +357,12 @@ namespace raspicam {
             //PR : create pool of message on video port
             MMAL_POOL_T *pool;
             video_port->buffer_size = video_port->buffer_size_recommended;
-            video_port->buffer_num = video_port->buffer_num_recommended;
+
+            uint32_t buffersNum = video_port->buffer_num_recommended;
+            if (callback_data._userRawBufferCallback) {
+                buffersNum += callback_data._numRawBuffersUsedByClient;
+            }
+            video_port->buffer_num = buffersNum;
             pool = mmal_port_pool_create ( video_port, video_port->buffer_num, video_port->buffer_size );
             if ( !pool ) {
                 cerr<< ( "Failed to create buffer header pool for video output port" );
