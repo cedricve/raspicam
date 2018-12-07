@@ -48,11 +48,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace std;
 namespace raspicam {
     namespace _private{
+#define MMAL_CAMERA_PREVIEW_PORT 0
 #define MMAL_CAMERA_VIDEO_PORT 1
 #define MMAL_CAMERA_CAPTURE_PORT 2
 #define VIDEO_FRAME_RATE_DEN 1
 #define VIDEO_OUTPUT_BUFFERS_NUM 3
 #define NUM_RAW_BUFFERS_USED_BY_CLIENT_DEFAULT 2
+
+#define CAMERA_PORT MMAL_CAMERA_PREVIEW_PORT
 
 
         Private_Impl::Private_Impl() {
@@ -109,7 +112,7 @@ namespace raspicam {
                 return false;
             }
             commitParameters();
-            camera_video_port   = State.camera_component->output[MMAL_CAMERA_VIDEO_PORT];
+            camera_video_port   = State.camera_component->output[CAMERA_PORT];
             callback_data.pstate = &State;
             callback_data.inst = this;
             // assign data to use for callback
@@ -128,11 +131,16 @@ namespace raspicam {
                 return false; //already opened
             }
 
-            // start capture
-            if ( mmal_port_parameter_set_boolean ( camera_video_port, MMAL_PARAMETER_CAPTURE, 1 ) != MMAL_SUCCESS ) {
-                release();
-                return false;
+            // Start capture.
+            // Note if camera port is a preview port, then capturing is active
+            // from the beginning.
+            if (CAMERA_PORT != MMAL_CAMERA_PREVIEW_PORT) {
+                if (mmal_port_parameter_set_boolean(camera_video_port, MMAL_PARAMETER_CAPTURE, 1) != MMAL_SUCCESS) {
+                    release();
+                    return false;
+                }
             }
+
             // Send all the buffers to the video port
 
             // Note:
@@ -252,7 +260,7 @@ namespace raspicam {
          */
         void Private_Impl::destroy_camera_component ( RASPIVID_STATE *state ) {
             if ( state->video_pool )
-                mmal_port_pool_destroy ( state->camera_component->output[MMAL_CAMERA_VIDEO_PORT], state->video_pool );
+                mmal_port_pool_destroy ( state->camera_component->output[CAMERA_PORT], state->video_pool );
             if ( state->camera_component ) {
                 mmal_component_destroy ( state->camera_component );
                 state->camera_component = NULL;
@@ -278,7 +286,7 @@ namespace raspicam {
                 return 0;
             }
 
-            video_port = camera->output[MMAL_CAMERA_VIDEO_PORT];
+            video_port = camera->output[CAMERA_PORT];
 
             //set sensor mode
             if ( state->sensor_mode != 0 && mmal_port_parameter_set_uint32 ( camera->control,
