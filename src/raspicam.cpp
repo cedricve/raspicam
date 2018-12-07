@@ -58,9 +58,11 @@ namespace raspicam {
         _impl->setUserCallback(userCallback, data);
     }
 
-    void RaspiCam::setRawBufferCallback(void (* userCallback)(const raspicam::RaspiCamRawBuffer &, void *),
-                                        void *data) {
-        _impl->setRawBufferCallback(userCallback, data);
+    void RaspiCam::setRawBufferCallback(
+            void (* userCallback)(const raspicam::RaspiCamRawBuffer &, void *),
+            void *data,
+            bool enableZeroCopyMode) {
+        _impl->setRawBufferCallback(userCallback, data, enableZeroCopyMode);
     }
 
     bool RaspiCam::isOpened() const {return _impl->isOpened();}

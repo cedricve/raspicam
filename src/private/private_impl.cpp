@@ -99,7 +99,7 @@ namespace raspicam {
             State.awbg_red=1.0;
             State.awbg_blue=1.0;
             State.sensor_mode = 0; //do not set mode by default
-
+            State.zeroCopyMode = false;
         }
         bool  Private_Impl::open ( bool StartCapture ) {
             if ( _isOpened ) return false; //already opened
@@ -161,11 +161,14 @@ namespace raspicam {
             callback_data._userCallback = userCallback;
         }
 
-        void Private_Impl::setRawBufferCallback(void (* userCallback)(const raspicam::RaspiCamRawBuffer &, void *),
-                                                void *data) {
+        void Private_Impl::setRawBufferCallback(
+                void (* userCallback)(const raspicam::RaspiCamRawBuffer &, void *),
+                void *data,
+                bool enableZeroCopyMode) {
             callback_data._userCallbackData = data;
             callback_data._userRawBufferCallback = userCallback;
             callback_data._numRawBuffersUsedByClient = NUM_RAW_BUFFERS_USED_BY_CLIENT_DEFAULT;
+            State.zeroCopyMode = enableZeroCopyMode;
         }
 
         void Private_Impl::release() {
@@ -329,8 +332,14 @@ namespace raspicam {
             // Set the encode format on the video  port
 
             format = video_port->format;
-            format->encoding_variant =   convertFormat ( State.captureFtm );
-            format->encoding = convertFormat ( State.captureFtm );
+            if (!State.zeroCopyMode) {
+                format->encoding_variant = convertFormat(State.captureFtm);
+                format->encoding = convertFormat(State.captureFtm);
+            } else {
+               format->encoding = MMAL_ENCODING_OPAQUE;
+               format->encoding_variant = MMAL_ENCODING_I420;
+            }
+
             format->es->video.width = VCOS_ALIGN_UP(state->width, 32);
             format->es->video.height = VCOS_ALIGN_UP(state->height, 16);
             format->es->video.crop.x = 0;
@@ -339,6 +348,25 @@ namespace raspicam {
             format->es->video.crop.height = state->height;
             format->es->video.frame_rate.num = state->framerate;
             format->es->video.frame_rate.den = VIDEO_FRAME_RATE_DEN;
+
+
+            if (state->zeroCopyMode) {
+                // Enable ZERO_COPY mode on the preview port which instructs MMAL to only
+                // pass the 4-byte opaque buffer handle instead of the contents of the opaque
+                // buffer.
+                // The opaque handle is resolved on VideoCore by the GL driver when the EGL
+                // image is created.
+                status = mmal_port_parameter_set_boolean(
+                        video_port,
+                        MMAL_PARAMETER_ZERO_COPY,
+                        MMAL_TRUE
+                    );
+                if (status != MMAL_SUCCESS)
+                {
+                    cerr << ( "Failed to enable zero copy on camera preview port" );
+                    return 0;
+                }
+            }
 
             status = mmal_port_format_commit ( video_port );
             if ( status ) {

@@ -62,6 +62,11 @@ namespace raspicam {
             int height;                         /// requested height of image
             int framerate;                      /// Requested frame rate (fps)
             /// the camera output or the encoder output (with compression artifacts)
+
+            /// In this case MMAL will pass opaque buffer header only.
+            /// May be used with rawBufferCallback only.
+            bool zeroCopyMode;
+
             MMAL_COMPONENT_T *camera_component;    /// Pointer to the camera component
             MMAL_POOL_T *video_pool; /// Pointer to the pool of buffers used by encoder output port
             //camera params
