@@ -82,6 +82,11 @@ namespace raspicam {
          */
         void retrieve ( cv::Mat& image );
 
+        /**
+         *	Grabs, decodes and returns the next video frame.
+         */
+        bool read(cv::Mat& image);
+
         /**Returns the specified VideoCapture property
          */
 

@@ -86,6 +86,20 @@ namespace raspicam {
         _impl->retrieve ( image.ptr<uchar> ( 0 ));
     }
 
+    /**
+    *	Grabs, decodes and returns the next video frame.
+    */
+    bool RaspiCam_Cv::read(cv::Mat& image) {
+       // Grab an Image
+       if (grab())
+          // If Grab successful, Retrieve Image and Store
+          retrieve(image);
+       else
+          // If Grab fails, release image
+          image.release();
+       return !image.empty();
+    }
+
     /**Returns the specified VideoCapture property
      */
 
