@@ -245,6 +245,8 @@ namespace raspicam {
             case RASPICAM_FORMAT_RGB:
                 return 3*getWidth() *getHeight();
                 break;
+            case RASPICAM_FORMAT_RGBA:
+                return 4*getWidth() *getHeight();
             default:
                 return 0;
             };
@@ -677,6 +679,8 @@ namespace raspicam {
                 int bpp = 1;
                 if(fmt == RASPICAM_FORMAT_RGB || fmt == RASPICAM_FORMAT_BGR) {
                     bpp = 3;
+                } else if (fmt == RASPICAM_FORMAT_RGBA) {
+                    bpp = 4;
                 }
 
                 for(int i = 0; i < height; i++) {
@@ -957,6 +961,8 @@ namespace raspicam {
 
         int Private_Impl::convertFormat ( RASPICAM_FORMAT fmt ) {
             switch ( fmt ) {
+            case RASPICAM_FORMAT_RGBA:
+                return MMAL_ENCODING_RGBA;
             case RASPICAM_FORMAT_RGB:
                 return _rgb_bgr_fixed ? MMAL_ENCODING_RGB24 : MMAL_ENCODING_BGR24;
             case RASPICAM_FORMAT_BGR:
