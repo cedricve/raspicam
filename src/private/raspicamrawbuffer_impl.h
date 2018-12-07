@@ -6,6 +6,13 @@
 #ifndef RaspiCamRawBuffer_Impl_H
 #define RaspiCamRawBuffer_Impl_H
 
+#include <memory>
+
+#if 0
+    // Enables detailed trace about buffer lifetime.
+    #define RASPICAM_RAW_BUFFER_ENABLE_TRACE
+#endif
+
 struct MMAL_BUFFER_HEADER_T;
 
 namespace raspicam {
@@ -17,38 +24,6 @@ namespace raspicam {
          */
         class RaspiCamRawBufferImpl {
         public:
-
-            /**
-             * Constructs raw buffer reference wrapper object.
-             * Note here we don't count
-             * @param buffer
-             */
-            explicit RaspiCamRawBufferImpl();
-
-            /**
-             * Disposes reference wrapper.
-             * If buffer has been acquired (reference been coutned for this wrapper),
-             * then buffer is released.
-             */
-            ~RaspiCamRawBufferImpl();
-
-            /**
-             * Copy constructor.
-             * Copies reference to internal buffer,
-             * increases references counter of buffer to be copied.
-             * @param src buffer reference to be copied
-             */
-            RaspiCamRawBufferImpl(const RaspiCamRawBufferImpl& src);
-
-            /**
-             * Assignment operator.
-             * Copies references to internal buffer,
-             * increases references counter of buffer to be copied,
-             * decreases reference counter of buffer to be overwritten.
-             * @param src buffer reference to be copied
-             * @return reference to this object.
-             */
-            RaspiCamRawBufferImpl& operator=(const RaspiCamRawBufferImpl& src);
 
             /**
              * Move contents
@@ -63,7 +38,7 @@ namespace raspicam {
              * @param buffer MMAL buffer to be wrapped.
              * @param acquire true if you want acquire/release to be called for this buffer.
              */
-            void setMmalBufferHeader(MMAL_BUFFER_HEADER_T *buffer, bool acquire = true);
+            void setMmalBufferHeader(MMAL_BUFFER_HEADER_T *buffer);
 
             /**
              * Get buffer contents
@@ -87,21 +62,15 @@ namespace raspicam {
              */
             void unlock();
 
+            long getUseCount() const;
+
         private:
 
-            void dispose();
-            void construct(const RaspiCamRawBufferImpl& src);
+            struct Deleter {
+                void operator()(MMAL_BUFFER_HEADER_T* _buffer) const;
+            };
 
-            /**
-             * Buffer we're going to wrap by this impl object.
-             */
-            MMAL_BUFFER_HEADER_T* _buffer;
-
-            /**
-             * True if 'acquire' operation has been performed, and
-             * 'release' operation is required on wrapper dispose stage.
-             */
-            bool _acquired;
+            std::shared_ptr<MMAL_BUFFER_HEADER_T> _buffer;
         };
     }
 }

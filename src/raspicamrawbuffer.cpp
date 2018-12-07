@@ -35,6 +35,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ****************************************************************/
 
+#include <iostream>
+
 #include "raspicamrawbuffer.h"
 #include "private/raspicamrawbuffer_impl.h"
 
@@ -45,19 +47,54 @@ namespace raspicam {
     }
 
     RaspiCamRawBuffer::~RaspiCamRawBuffer() {
+#ifdef RASPICAM_RAW_BUFFER_ENABLE_TRACE
+            std::cout << std::hex
+            << "RaspiCam: buffer " << _impl->getBuffer()
+            << " use is to be removed [" << _impl->getUseCount() << "] by destructor"
+            << std::endl
+            << std::flush;
+#endif
         delete _impl;
     }
 
     RaspiCamRawBuffer::RaspiCamRawBuffer(const raspicam::RaspiCamRawBuffer &src) {
         _impl = new _private::RaspiCamRawBufferImpl(*src._impl);
+#ifdef RASPICAM_RAW_BUFFER_ENABLE_TRACE
+            std::cout << std::hex
+            << "RaspiCam: buffer " << _impl->getBuffer()
+            << " added use [" << _impl->getUseCount() << "] by copy constructor"
+            << std::endl
+            << std::flush;
+#endif
     }
 
     RaspiCamRawBuffer& RaspiCamRawBuffer::operator=(const raspicam::RaspiCamRawBuffer &src) {
+#ifdef RASPICAM_RAW_BUFFER_ENABLE_TRACE
+            std::cout << std::hex
+            << "RaspiCam: buffer " << _impl->getBuffer()
+            << " use is to be removed [" << _impl->getUseCount() << "] by assignment"
+            << std::endl
+            << std::flush;
+#endif
         *_impl = *src._impl;
+#ifdef RASPICAM_RAW_BUFFER_ENABLE_TRACE
+            std::cout << std::hex
+            << "RaspiCam: buffer " << _impl->getBuffer()
+            << " added use [" << _impl->getUseCount() << "] by assignment"
+            << std::endl
+            << std::flush;
+#endif
         return *this;
     }
 
     void RaspiCamRawBuffer::moveFrom(raspicam::RaspiCamRawBuffer &src) {
+#ifdef RASPICAM_RAW_BUFFER_ENABLE_TRACE
+            std::cout << std::hex
+            << "RaspiCam: buffer " << _impl->getBuffer()
+            << " use is to be removed [" << _impl->getUseCount() << "] by moveFrom method"
+            << std::endl
+            << std::flush;
+#endif
         _impl->moveFrom(*src._impl);
     }
 

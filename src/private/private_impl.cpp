@@ -36,6 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ****************************************************************/
 
 #include "private_impl.h"
+#include <algorithm>
 #include <iostream>
 #include <cstdio>
 #include "mmal/util/mmal_util.h"
@@ -134,7 +135,13 @@ namespace raspicam {
             }
             // Send all the buffers to the video port
 
-            int num = mmal_queue_length ( State.video_pool->queue );
+            // Note:
+            // We are not sending all buffers available, just part,
+            // by some weird reason mmal uses only one buffer, and ignores the rest.
+            // So we provide mmal with buffers we need, and keep the rest in pool
+            // Then during a callback, we then may borrow buffer for a while,
+            // replacing it by one from pool.
+            int num = camera_video_port->buffer_num_recommended;
             int q;
             for ( q=0; q<num; q++ ) {
                 MMAL_BUFFER_HEADER_T *buffer = mmal_queue_get ( State.video_pool->queue );
@@ -549,36 +556,38 @@ namespace raspicam {
             bool hasGrabbed=false;
 //            pData->_mutex.lock();
              std::unique_lock<std::mutex> lck ( pData->_mutex );
-            if ( pData ) {
 
-                bool processingRequired =
-                        pData->wantToGrab ||
-                        pData->_userCallback ||
-                        pData->_userRawBufferCallback;
+            // Wrap _buffer object into RaspiCamRawBuffer.
+            // It uses a references counting, and if there are no references
+            // remains till destruction stage it releases internal buffer.
+            {
+                RaspiCamRawBuffer bufferSharedPtr;
+                bufferSharedPtr.accessImpl()->setMmalBufferHeader(buffer);
+                if (pData) {
 
-                if(buffer->length && processingRequired){
+                    bool processingRequired =
+                            pData->wantToGrab ||
+                            pData->_userCallback ||
+                            pData->_userRawBufferCallback;
 
-                    if (pData->_userRawBufferCallback) {
-                        RaspiCamRawBuffer rawBuffer;
+                    if (buffer->length && processingRequired) {
 
-                        // Setup buffer but don't acquire it,
-                        // for it is already acquired and to be released a bit below.
-                        rawBuffer.accessImpl()->setMmalBufferHeader(buffer, false);
-                        pData->_userRawBufferCallback(rawBuffer, pData->_userCallbackData);
-                    } else {
-                        mmal_buffer_header_mem_lock ( buffer );
-                        process_video_buffer(pData, buffer);
-                        mmal_buffer_header_mem_unlock ( buffer );
+                        if (pData->_userRawBufferCallback) {
+                            pData->_userRawBufferCallback(bufferSharedPtr, pData->_userCallbackData);
+                        } else {
+                            mmal_buffer_header_mem_lock(buffer);
+                            process_video_buffer(pData, buffer);
+                            mmal_buffer_header_mem_unlock(buffer);
+                        }
+
+                        pData->wantToGrab = false;
+                        hasGrabbed = true;
                     }
-
-                    pData->wantToGrab =false;
-                    hasGrabbed=true;
                 }
+                // If buffer is not used it then is to be released
+                // by RaspiCamRawBuffer destructor.
             }
-            //pData->_mutex.unlock();
-           // if ( hasGrabbed ) pData->Thcond.BroadCast(); //wake up waiting client
-            // release buffer back to the pool
-            mmal_buffer_header_release ( buffer );
+
             // and send one back to the port (if still open)
             if ( port->is_enabled ) {
                 MMAL_STATUS_T status;
@@ -587,9 +596,12 @@ namespace raspicam {
 
                 if ( new_buffer )
                     status = mmal_port_send_buffer ( port, new_buffer );
+                else {
+                    cerr << "RaspiCam's buffer pool is empty." << endl;
+                }
 
                 if ( !new_buffer || status != MMAL_SUCCESS )
-                    printf ( "Unable to return a buffer to the encoder port" );
+                    printf ( "Unable to return a buffer to the encoder port\n" );
             }
 
             if ( pData->pstate->shutterSpeed!=0 && pData->pstate->rpc_exposureMode == RASPICAM_EXPOSURE_FIXEDFPS)
