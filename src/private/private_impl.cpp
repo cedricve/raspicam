@@ -144,11 +144,11 @@ namespace raspicam {
             // Send all the buffers to the video port
 
             // Note:
-            // We are not sending all buffers available, just part,
+            // We are not sending all buffers available,
             // by some weird reason mmal uses only one buffer, and ignores the rest.
-            // So we provide mmal with buffers we need, and keep the rest in pool
-            // Then during a callback, we then may borrow buffer for a while,
-            // replacing it by one from pool.
+            // So we provide mmal with buffers it needs, and keep the rest in pool.
+            // During a video buffer callback, we then may borrow mmal's buffer
+            // for a while, replacing it by one from pool.
             int num = camera_video_port->buffer_num_recommended;
             int q;
             for ( q=0; q<num; q++ ) {
@@ -622,7 +622,7 @@ namespace raspicam {
                         hasGrabbed = true;
                     }
                 }
-                // If buffer is not used it then is to be released
+                // If buffer is not used, it then is to be released
                 // by RaspiCamRawBuffer destructor.
             }
 
