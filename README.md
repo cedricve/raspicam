@@ -45,7 +45,7 @@ Note 2: the library is currently setting the camera in video mode. So, maximum r
 
 Clone the repository to your raspberry. Then, uncompress the file and compile
  
-	git clone https://github.com/cedricve/raspicam .
+	git clone https://github.com/cedricve/raspicam.git
 	cd raspicam
 	mkdir build
 	cd build
