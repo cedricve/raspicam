@@ -73,8 +73,12 @@ Finally compile, install and update the ldconfig:
 	sudo make install
 	sudo ldconfig
  
-After that, you have the programs raspicam_test  and raspicam_cv_test (if opencv was enabled).
+After that, you have the programs raspicam_test  and raspicam_cv_test (if opencv was enabled) in build/utils.
 Run the first program to check that compilation is ok.
+```
+sudo ./raspicam_test
+sudo ./raspicam_cv_test
+```
  
 ### Using it in your projects
  
