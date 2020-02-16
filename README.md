@@ -45,7 +45,7 @@ Note 2: the library is currently setting the camera in video mode. So, maximum r
 
 Clone the repository to your raspberry. Then, uncompress the file and compile
  
-	git clone https://github.com/cedricve/raspicam .
+	git clone https://github.com/cedricve/raspicam.git
 	cd raspicam
 	mkdir build
 	cd build
@@ -73,8 +73,12 @@ Finally compile, install and update the ldconfig:
 	sudo make install
 	sudo ldconfig
  
-After that, you have the programs raspicam_test  and raspicam_cv_test (if opencv was enabled).
+After that, you have the programs raspicam_test  and raspicam_cv_test (if opencv was enabled) in build/utils.
 Run the first program to check that compilation is ok.
+```
+sudo ./raspicam_test
+sudo ./raspicam_cv_test
+```
  
 ### Using it in your projects
  
