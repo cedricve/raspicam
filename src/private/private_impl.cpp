@@ -36,18 +36,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ****************************************************************/
 
 #include "private_impl.h"
+#include <algorithm>
 #include <iostream>
 #include <cstdio>
 #include "mmal/util/mmal_util.h"
 #include "mmal/util/mmal_util_params.h"
 #include "mmal/util/mmal_default_components.h"
+#include "raspicamrawbuffer.h"
+#include "raspicamrawbuffer_impl.h"
+
 using namespace std;
 namespace raspicam {
     namespace _private{
+#define MMAL_CAMERA_PREVIEW_PORT 0
 #define MMAL_CAMERA_VIDEO_PORT 1
 #define MMAL_CAMERA_CAPTURE_PORT 2
 #define VIDEO_FRAME_RATE_DEN 1
 #define VIDEO_OUTPUT_BUFFERS_NUM 3
+#define NUM_RAW_BUFFERS_USED_BY_CLIENT_DEFAULT 2
+
+#define CAMERA_PORT MMAL_CAMERA_PREVIEW_PORT
 
 
         Private_Impl::Private_Impl() {
@@ -94,7 +102,7 @@ namespace raspicam {
             State.awbg_red=1.0;
             State.awbg_blue=1.0;
             State.sensor_mode = 0; //do not set mode by default
-
+            State.zeroCopyMode = false;
         }
         bool  Private_Impl::open ( bool StartCapture ) {
             if ( _isOpened ) return false; //already opened
@@ -104,7 +112,7 @@ namespace raspicam {
                 return false;
             }
             commitParameters();
-            camera_video_port   = State.camera_component->output[MMAL_CAMERA_VIDEO_PORT];
+            camera_video_port   = State.camera_component->output[CAMERA_PORT];
             callback_data.pstate = &State;
             callback_data.inst = this;
             // assign data to use for callback
@@ -123,14 +131,25 @@ namespace raspicam {
                 return false; //already opened
             }
 
-            // start capture
-            if ( mmal_port_parameter_set_boolean ( camera_video_port, MMAL_PARAMETER_CAPTURE, 1 ) != MMAL_SUCCESS ) {
-                release();
-                return false;
+            // Start capture.
+            // Note if camera port is a preview port, then capturing is active
+            // from the beginning.
+            if (CAMERA_PORT != MMAL_CAMERA_PREVIEW_PORT) {
+                if (mmal_port_parameter_set_boolean(camera_video_port, MMAL_PARAMETER_CAPTURE, 1) != MMAL_SUCCESS) {
+                    release();
+                    return false;
+                }
             }
+
             // Send all the buffers to the video port
 
-            int num = mmal_queue_length ( State.video_pool->queue );
+            // Note:
+            // We are not sending all buffers available,
+            // by some weird reason mmal uses only one buffer, and ignores the rest.
+            // So we provide mmal with buffers it needs, and keep the rest in pool.
+            // During a video buffer callback, we then may borrow mmal's buffer
+            // for a while, replacing it by one from pool.
+            int num = camera_video_port->buffer_num_recommended;
             int q;
             for ( q=0; q<num; q++ ) {
                 MMAL_BUFFER_HEADER_T *buffer = mmal_queue_get ( State.video_pool->queue );
@@ -148,6 +167,16 @@ namespace raspicam {
         void Private_Impl::setUserCallback(void (*userCallback)(void*) , void* data){
             callback_data._userCallbackData = data;
             callback_data._userCallback = userCallback;
+        }
+
+        void Private_Impl::setRawBufferCallback(
+                void (* userCallback)(const raspicam::RaspiCamRawBuffer &, void *),
+                void *data,
+                bool enableZeroCopyMode) {
+            callback_data._userCallbackData = data;
+            callback_data._userRawBufferCallback = userCallback;
+            callback_data._numRawBuffersUsedByClient = NUM_RAW_BUFFERS_USED_BY_CLIENT_DEFAULT;
+            State.zeroCopyMode = enableZeroCopyMode;
         }
 
         void Private_Impl::release() {
@@ -216,6 +245,8 @@ namespace raspicam {
             case RASPICAM_FORMAT_RGB:
                 return 3*getWidth() *getHeight();
                 break;
+            case RASPICAM_FORMAT_RGBA:
+                return 4*getWidth() *getHeight();
             default:
                 return 0;
             };
@@ -231,7 +262,7 @@ namespace raspicam {
          */
         void Private_Impl::destroy_camera_component ( RASPIVID_STATE *state ) {
             if ( state->video_pool )
-                mmal_port_pool_destroy ( state->camera_component->output[MMAL_CAMERA_VIDEO_PORT], state->video_pool );
+                mmal_port_pool_destroy ( state->camera_component->output[CAMERA_PORT], state->video_pool );
             if ( state->camera_component ) {
                 mmal_component_destroy ( state->camera_component );
                 state->camera_component = NULL;
@@ -257,7 +288,7 @@ namespace raspicam {
                 return 0;
             }
 
-            video_port = camera->output[MMAL_CAMERA_VIDEO_PORT];
+            video_port = camera->output[CAMERA_PORT];
 
             //set sensor mode
             if ( state->sensor_mode != 0 && mmal_port_parameter_set_uint32 ( camera->control,
@@ -311,8 +342,14 @@ namespace raspicam {
             // Set the encode format on the video  port
 
             format = video_port->format;
-            format->encoding_variant =   convertFormat ( State.captureFtm );
-            format->encoding = convertFormat ( State.captureFtm );
+            if (!State.zeroCopyMode) {
+                format->encoding_variant = convertFormat(State.captureFtm);
+                format->encoding = convertFormat(State.captureFtm);
+            } else {
+               format->encoding = MMAL_ENCODING_OPAQUE;
+               format->encoding_variant = MMAL_ENCODING_I420;
+            }
+
             format->es->video.width = VCOS_ALIGN_UP(state->width, 32);
             format->es->video.height = VCOS_ALIGN_UP(state->height, 16);
             format->es->video.crop.x = 0;
@@ -321,6 +358,25 @@ namespace raspicam {
             format->es->video.crop.height = state->height;
             format->es->video.frame_rate.num = state->framerate;
             format->es->video.frame_rate.den = VIDEO_FRAME_RATE_DEN;
+
+
+            if (state->zeroCopyMode) {
+                // Enable ZERO_COPY mode on the preview port which instructs MMAL to only
+                // pass the 4-byte opaque buffer handle instead of the contents of the opaque
+                // buffer.
+                // The opaque handle is resolved on VideoCore by the GL driver when the EGL
+                // image is created.
+                status = mmal_port_parameter_set_boolean(
+                        video_port,
+                        MMAL_PARAMETER_ZERO_COPY,
+                        MMAL_TRUE
+                    );
+                if (status != MMAL_SUCCESS)
+                {
+                    cerr << ( "Failed to enable zero copy on camera preview port" );
+                    return 0;
+                }
+            }
 
             status = mmal_port_format_commit ( video_port );
             if ( status ) {
@@ -346,7 +402,12 @@ namespace raspicam {
             //PR : create pool of message on video port
             MMAL_POOL_T *pool;
             video_port->buffer_size = video_port->buffer_size_recommended;
-            video_port->buffer_num = video_port->buffer_num_recommended;
+
+            uint32_t buffersNum = video_port->buffer_num_recommended;
+            if (callback_data._userRawBufferCallback) {
+                buffersNum += callback_data._numRawBuffersUsedByClient;
+            }
+            video_port->buffer_num = buffersNum;
             pool = mmal_port_pool_create ( video_port, video_port->buffer_num, video_port->buffer_size );
             if ( !pool ) {
                 cerr<< ( "Failed to create buffer header pool for video output port" );
@@ -533,70 +594,38 @@ namespace raspicam {
             bool hasGrabbed=false;
 //            pData->_mutex.lock();
              std::unique_lock<std::mutex> lck ( pData->_mutex );
-            if ( pData ) {
-                if( buffer->length &&
-                        ( pData->_userCallback || pData->wantToGrab )){
-                    mmal_buffer_header_mem_lock ( buffer );
 
-                    Private_Impl *self = pData->inst;
+            // Wrap _buffer object into RaspiCamRawBuffer.
+            // It uses a references counting, and if there are no references
+            // remains till destruction stage it releases internal buffer.
+            {
+                RaspiCamRawBuffer bufferSharedPtr;
+                bufferSharedPtr.accessImpl()->setMmalBufferHeader(buffer);
+                if (pData) {
 
-                    int width = pData->pstate->width;
-                    int height = pData->pstate->height;
-                    RASPICAM_FORMAT fmt = pData->pstate->captureFtm;
-                    bool encoded = false; // So far only unencoded formats can be configured
+                    bool processingRequired =
+                            pData->wantToGrab ||
+                            pData->_userCallback ||
+                            pData->_userRawBufferCallback;
 
-                    // For unencoded formats, the buffer is padding to blocks
-                    // TODO: According to picamera ('Under certain circumstances (non-resized, non-YUV, video-port captures), the resolution is rounded to 16x16 blocks instead of 32x16. Adjust your resolution rounding accordingly')
-                    int bufferWidth = VCOS_ALIGN_UP(width, 32);
-                    int bufferHeight = VCOS_ALIGN_UP(height, 16);
+                    if (buffer->length && processingRequired) {
 
-                    if ( bufferWidth == width || encoded ) {
-                        pData->_buffData.resize ( buffer->length );
-                        memcpy ( pData->_buffData.data,buffer->data,buffer->length );
+                        if (pData->_userRawBufferCallback) {
+                            pData->_userRawBufferCallback(bufferSharedPtr, pData->_userCallbackData);
+                        } else {
+                            mmal_buffer_header_mem_lock(buffer);
+                            process_video_buffer(pData, buffer);
+                            mmal_buffer_header_mem_unlock(buffer);
+                        }
+
+                        pData->wantToGrab = false;
+                        hasGrabbed = true;
                     }
-                    else {
-
-                        pData->_buffData.resize ( self->getImageTypeSize( fmt ) );
-
-                        int bpp = 1;
-                        if(fmt == RASPICAM_FORMAT_RGB || fmt == RASPICAM_FORMAT_BGR) {
-                            bpp = 3;
-                        }
-
-                        for(int i = 0; i < height; i++) {
-                            memcpy ( pData->_buffData.data + i*width*bpp, buffer->data + i*bufferWidth*bpp, width*bpp);
-                        }
-
-                        if ( fmt == RASPICAM_FORMAT_YUV420 ) {
-                            // Starting points in both buffers
-                            uint8_t *outUV = pData->_buffData.data + width*height;
-                            uint8_t *bufferUV = buffer->data + bufferHeight*bufferWidth;
-
-                            width /= 2;
-                            height /= 2;
-                            bufferWidth /= 2;
-                            bufferHeight /= 2;
-
-                            for(int plane = 0; plane < 2; plane++) {
-                                for(int i = 0; i < height; i++) {
-                                    memcpy ( outUV + i*width, bufferUV + i*bufferWidth, width );
-                                }
-                                outUV += width*height;
-                                bufferUV += bufferWidth*bufferHeight;
-                            }
-                        }
-
-                    }
-
-                    pData->wantToGrab =false;
-                    hasGrabbed=true;
-                    mmal_buffer_header_mem_unlock ( buffer );
                 }
+                // If buffer is not used, it then is to be released
+                // by RaspiCamRawBuffer destructor.
             }
-            //pData->_mutex.unlock();
-           // if ( hasGrabbed ) pData->Thcond.BroadCast(); //wake up waiting client
-            // release buffer back to the pool
-            mmal_buffer_header_release ( buffer );
+
             // and send one back to the port (if still open)
             if ( port->is_enabled ) {
                 MMAL_STATUS_T status;
@@ -605,9 +634,12 @@ namespace raspicam {
 
                 if ( new_buffer )
                     status = mmal_port_send_buffer ( port, new_buffer );
+                else {
+                    cerr << "RaspiCam's buffer pool is empty." << endl;
+                }
 
                 if ( !new_buffer || status != MMAL_SUCCESS )
-                    printf ( "Unable to return a buffer to the encoder port" );
+                    printf ( "Unable to return a buffer to the encoder port\n" );
             }
 
             if ( pData->pstate->shutterSpeed!=0 && pData->pstate->rpc_exposureMode == RASPICAM_EXPOSURE_FIXEDFPS)
@@ -623,7 +655,58 @@ namespace raspicam {
 
         }
 
+        void Private_Impl::process_video_buffer(Private_Impl::PORT_USERDATA *pData,
+                                                MMAL_BUFFER_HEADER_T *buffer) {
+            Private_Impl *self = pData->inst;
 
+            int width = pData->pstate->width;
+            int height = pData->pstate->height;
+            RASPICAM_FORMAT fmt = pData->pstate->captureFtm;
+            bool encoded = false; // So far only unencoded formats can be configured
+
+            // For unencoded formats, the buffer is padding to blocks
+            // TODO: According to picamera ('Under certain circumstances (non-resized, non-YUV, video-port captures), the resolution is rounded to 16x16 blocks instead of 32x16. Adjust your resolution rounding accordingly')
+            int bufferWidth = VCOS_ALIGN_UP(width, 32);
+            int bufferHeight = VCOS_ALIGN_UP(height, 16);
+
+            if ( bufferWidth == width || encoded ) {
+                pData->_buffData.resize ( buffer->length );
+                memcpy ( pData->_buffData.data,buffer->data,buffer->length );
+            } else {
+
+                pData->_buffData.resize ( self->getImageTypeSize( fmt ) );
+
+                int bpp = 1;
+                if(fmt == RASPICAM_FORMAT_RGB || fmt == RASPICAM_FORMAT_BGR) {
+                    bpp = 3;
+                } else if (fmt == RASPICAM_FORMAT_RGBA) {
+                    bpp = 4;
+                }
+
+                for(int i = 0; i < height; i++) {
+                    memcpy ( pData->_buffData.data + i*width*bpp, buffer->data + i*bufferWidth*bpp, width*bpp);
+                }
+
+                if ( fmt == RASPICAM_FORMAT_YUV420 ) {
+                    // Starting points in both buffers
+                    uint8_t *outUV = pData->_buffData.data + width*height;
+                    uint8_t *bufferUV = buffer->data + bufferHeight*bufferWidth;
+
+                    width /= 2;
+                    height /= 2;
+                    bufferWidth /= 2;
+                    bufferHeight /= 2;
+
+                    for(int plane = 0; plane < 2; plane++) {
+                        for(int i = 0; i < height; i++) {
+                            memcpy ( outUV + i*width, bufferUV + i*bufferWidth, width );
+                        }
+                        outUV += width*height;
+                        bufferUV += bufferWidth*bufferHeight;
+                    }
+                }
+            }
+        }
 
         void Private_Impl::setWidth ( unsigned int width ) {
             State.width = width;
@@ -878,6 +961,8 @@ namespace raspicam {
 
         int Private_Impl::convertFormat ( RASPICAM_FORMAT fmt ) {
             switch ( fmt ) {
+            case RASPICAM_FORMAT_RGBA:
+                return MMAL_ENCODING_RGBA;
             case RASPICAM_FORMAT_RGB:
                 return _rgb_bgr_fixed ? MMAL_ENCODING_RGB24 : MMAL_ENCODING_BGR24;
             case RASPICAM_FORMAT_BGR:

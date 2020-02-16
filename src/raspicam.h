@@ -47,6 +47,7 @@ namespace raspicam {
     }
     /**Base class that do all the hard work
      */
+    class RaspiCamRawBuffer;
     class RaspiCam
     {
         public:
@@ -69,6 +70,23 @@ namespace raspicam {
          * with 'data' as argument.
          */
         void setUserCallback(void (*userCallback)(void*) , void* data=0);
+
+        /**
+         * Specify callback which is called every time when new camera raw buffer is
+         * obtained.
+         * @param userCallback callback function
+         * @param data user data you want to pass into callback.
+         * @param enableZeroCopyMode
+         *     Enable ZERO_COPY mode on the preview port which instructs MMAL to only
+         *     pass the 4-byte opaque buffer handle instead of the contents of the opaque
+         *     buffer.
+         *     The opaque handle is resolved on VideoCore by the GL driver when the EGL
+         *     image is created.
+         */
+        void setRawBufferCallback(
+                void (*userCallback)(const RaspiCamRawBuffer&, void*) ,
+                void* data=0,
+                bool enableZeroCopyMode = false);
 
         /**indicates if camera is open
         */
