@@ -73,6 +73,19 @@ namespace raspicam {
             memcpy ( image.ptr<uchar> ( 0 ),image_buffer,image.cols*image.rows*3 );
         }
     }
+    /**
+     *	Grabs, decodes and returns the next video frame.
+     */
+    bool RaspiCam_Cv::read(cv::Mat& image) {
+       // Grab an Image
+       if (grab())
+          // If Grab successful, Retrieve Image and Store
+          retrieve(image);
+       else
+          // If Grab fails, release image
+          image.release();
+       return !image.empty();
+    }
 
     void RaspiCam_Still_Cv::release() {}
 
