@@ -35,6 +35,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ****************************************************************/
 
+#include <opencv2/videoio/videoio.hpp>
 #include "private_still/private_still_impl.h"
 #include "raspicam_still_cv.h"
 #include "scaler.h"

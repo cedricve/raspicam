@@ -38,7 +38,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef RaspiCam_CV_H
 #define RaspiCam_CV_H
 #include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
 namespace raspicam {
 
     namespace _private{

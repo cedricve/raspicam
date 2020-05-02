@@ -36,7 +36,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ****************************************************************/
 #ifndef _RaspiCam_STILL_H
 #define _RaspiCam_STILL_H
-#include <opencv2/highgui/highgui.hpp>
 #include "raspicamtypes.h"
 #include <cstdio>
 #include <opencv2/core/core.hpp>

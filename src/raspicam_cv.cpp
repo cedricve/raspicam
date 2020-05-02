@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "raspicam_cv.h"
 #include "private/private_impl.h"
 #include <iostream>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/videoio/videoio.hpp>
 #include "scaler.h"
 namespace raspicam {
     RaspiCam_Cv::RaspiCam_Cv() {
