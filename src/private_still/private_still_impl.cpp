@@ -228,17 +228,6 @@ namespace raspicam {
             }
 
             camera_still_port = camera->output[MMAL_CAMERA_CAPTURE_PORT];
-			
-			MMAL_PARAMETER_INT32_T camera_num = {
-				{MMAL_PARAMETER_CAMERA_NUM, sizeof ( camera_num ) },
-				getCameraNum()
-			};
-			if (mmal_port_parameter_set ( camera->control, &camera_num.hdr) != MMAL_SUCCESS )
-			{
-                cerr << "Could not select camera " << getCameraNum() << '\n';
-                destroyCamera();
-                return 0;
-			}
 
 			MMAL_PARAMETER_INT32_T camera_num = {
 				{MMAL_PARAMETER_CAMERA_NUM, sizeof ( camera_num ) },
