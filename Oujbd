@@ -1,0 +1,347 @@
+Toggle navigation
+Toggle navigation
+SuperTool Beta7
+idme.com:all
+spf:idme.com:all   
+Deliverability advertisement image
+ns1.linode.com (SOA)
+ns2.linode.com (Matches SOA)
+ns3.linode.com (Matches SOA)
+ns4.linode.com (Matches SOA)
+ns5.linode.com (Matches SOA)
+dns lookup	dns check	mx lookup	dmarc lookup
+Reported by ns5.linode.com on 7/2/2023 at 7:01:38 PM (UTC -5), just for you.  Transcript
+spf:idme.com   
+Deliverability advertisement image
+Test
+Result
+Status Problem
+SPF Record Published
+No SPF Record found
+Information More Info
+Your DNS hosting provider is "Linode, LLC" Need Bulk Dns Provider Data?
+dns lookup	dns check	mx lookup	dmarc lookup	dns propagation
+Reported by ns5.linode.com on 7/2/2023 at 7:01:33 PM (UTC -5), just for you.  Transcript
+a:idme.com  
+Type
+Domain Name
+IP Address
+TTL
+A
+idme.com
+69.164.203.62
+Akamai Technologies, Inc. (AS63949)
+60 min
+Test
+Result
+Status Ok
+DNS Record Published
+DNS Record found
+Your DNS hosting provider is "Linode, LLC" Need Bulk Dns Provider Data?
+dns check	mx lookup	dmarc lookup	spf lookup	dns propagation
+Reported by ns5.linode.com on 7/2/2023 at 7:01:28 PM (UTC -5), just for you.  Transcript
+dns:idme.com  
+ns1.linode.com (SOA)
+Type
+Domain Name
+IP Address
+TTL
+NS
+ns1.linode.com
+162.159.27.72
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns2.linode.com
+162.159.24.39
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns3.linode.com
+162.159.25.129
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns4.linode.com
+162.159.26.99
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns5.linode.com
+162.159.24.25
+Cloudflare, Inc. (AS13335)
+60 min
+ns2.linode.com (Matches SOA)
+Type
+Domain Name
+IP Address
+TTL
+NS
+ns1.linode.com
+162.159.27.72
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns2.linode.com
+162.159.24.39
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns3.linode.com
+162.159.25.129
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns4.linode.com
+162.159.26.99
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns5.linode.com
+162.159.24.25
+Cloudflare, Inc. (AS13335)
+60 min
+ns3.linode.com (Matches SOA)
+Type
+Domain Name
+IP Address
+TTL
+NS
+ns1.linode.com
+162.159.27.72
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns2.linode.com
+162.159.24.39
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns3.linode.com
+162.159.25.129
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns4.linode.com
+162.159.26.99
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns5.linode.com
+162.159.24.25
+Cloudflare, Inc. (AS13335)
+60 min
+ns4.linode.com (Matches SOA)
+Type
+Domain Name
+IP Address
+TTL
+NS
+ns1.linode.com
+162.159.27.72
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns2.linode.com
+162.159.24.39
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns3.linode.com
+162.159.25.129
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns4.linode.com
+162.159.26.99
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns5.linode.com
+162.159.24.25
+Cloudflare, Inc. (AS13335)
+60 min
+ns5.linode.com (Matches SOA)
+Type
+Domain Name
+IP Address
+TTL
+NS
+ns1.linode.com
+162.159.27.72
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns2.linode.com
+162.159.24.39
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns3.linode.com
+162.159.25.129
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns4.linode.com
+162.159.26.99
+Cloudflare, Inc. (AS13335)
+60 min
+NS
+ns5.linode.com
+162.159.24.25
+Cloudflare, Inc. (AS13335)
+60 min
+dns lookup	mx lookup	dmarc lookup	spf lookup
+Reported by ns5.linode.com on 7/2/2023 at 7:00:44 PM (UTC -5), just for you.  Transcript
+dns:idme.com  
+Type
+Domain Name
+IP Address
+TTL
+Status
+Time (ms)
+Auth
+Parent
+Local
+NS
+ns1.linode.com
+162.159.27.72
+Cloudflare, Inc. (AS13335)
+60 min
+Status Ok 
+20
+Status Ok 
+Status Ok 
+Status Ok 
+NS
+ns2.linode.com
+162.159.24.39
+Cloudflare, Inc. (AS13335)
+60 min
+Status Ok 
+67
+Status Ok 
+Status Ok 
+Status Ok 
+NS
+ns3.linode.com
+162.159.25.129
+Cloudflare, Inc. (AS13335)
+60 min
+Status Ok 
+78
+Status Ok 
+Status Ok 
+Status Ok 
+NS
+ns4.linode.com
+162.159.26.99
+Cloudflare, Inc. (AS13335)
+60 min
+Status Ok 
+78
+Status Ok 
+Status Ok 
+Status Ok 
+NS
+ns5.linode.com
+162.159.24.25
+Cloudflare, Inc. (AS13335)
+60 min
+Status Ok 
+91
+Status Ok 
+Status Ok 
+Status Ok 
+Result
+Status Warning
+Name Servers are on the Same Subnet
+162.159.24
+Information More Info
+Status Warning
+SOA Retry Value is outside of the recommended range
+ns1.linode.com reported Retry 14400 : Retry is recommended to be between 120 and 7200.
+Information More Info
+Status Ok
+DNS Record found
+Status Ok
+No Bad Glue Detected
+Status Ok
+At Least Two Name Servers Found
+Status Ok
+All name servers are responding
+Status Ok
+All of the name servers are Authoritative
+Status Ok
+Local NS list matches Parent NS list
+Status Ok
+Name Servers have Public IP Addresses
+Status Ok
+Serial numbers match
+2010122078
+Status Ok
+Primary Name Server Listed At Parent
+Status Ok
+SOA Serial Number Format appears valid
+Status Ok
+SOA Refresh Value is within the recommended range
+Status Ok
+SOA Expire Value within recommended limits
+Status Ok
+SOA Minimum TTL Value is within allowed values
+Status Ok
+No Open Recursive Name Server Detected
+Your DNS hosting provider is "Linode, LLC" Need Bulk Dns Provider Data?
+dns lookup	mx lookup	dmarc lookup	spf lookup	dns propagation
+Reported by ns5.linode.com on 7/2/2023 at 6:59:56 PM (UTC -5), just for you.  Transcript
+a:idme.com  
+Type
+Domain Name
+IP Address
+TTL
+A
+idme.com
+69.164.203.62
+Akamai Technologies, Inc. (AS63949)
+60 min
+Test
+Result
+Status Ok
+DNS Record Published
+DNS Record found
+Your DNS hosting provider is "Linode, LLC" Need Bulk Dns Provider Data?
+dns check	mx lookup	dmarc lookup	spf lookup	dns propagation
+Reported by ns2.linode.com on 7/2/2023 at 6:59:50 PM (UTC -5), just for you.  Transcript
+ABOUT THE SUPERTOOL!
+All of your MX record, DNS, blacklist and SMTP diagnostics in one integrated tool.  Input a domain name or IP Address or Host Name. Links in the results will guide you to other relevant tools and information.  And you'll have a chronological history of your results. 
+
+If you already know exactly what you want, you can force a particular test or lookup.  Try some of these examples:
+
+(e.g. "blacklist: 127.0.0.2" will do a blacklist lookup)
+
+Command	 	Explanation
+blacklist:	 	Check IP or host for reputation
+smtp:	 	Test mail server SMTP (port 25)
+mx:	 	DNS MX records for domain
+a:	 	DNS A record IP address for host name
+spf:	 	Check SPF records on a domain
+txt:	 	Check TXT records on a domain
+ptr:	 	DNS PTR record for host name
+cname:	 	DNS canonical host name to IP address
+whois:	 	Get domain registration information
+arin:		Get IP address block information
+soa:		Get Start of Authority record for a domain
+tcp:		Verify an IP Address allows tcp connections
+http:		Verify a URL allows http connections  
+https:		Verify a URL allows secure http connections  
+ping:		Perform a standard ICMP ping69.164.203.62.22
+trace:		Perform a standard ICMP trace route
+dns:		Check your DNS Servers for possible problems  New!
+ 	 	 
+Other tools
+
+Feedback: If you run into any problems with the site or have an idea that you think would make it better, we would appreciate your feedback. Please leave us some Feedback.
+
+Your IP is: 102.89.43.42|  Contact Terms & Conditions Site Map API Privacy Phone: (866)-MXTOOLBOX / (866)-698-6652 |  © Copyright 2004-2021, MXToolBox, Inc, All rights reserved. US Patents 10839353 B2 & 11461738 B2
+ 
+burritos@banana-pancakes.com braunstrowman@banana-pancakes.com finnbalor@banana-pancakes.com ricflair@banana-pancakes.com randysavage@banana-pancakes.com
