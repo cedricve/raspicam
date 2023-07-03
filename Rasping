@@ -1,0 +1,72 @@
+Toggle navigation
+Toggle navigation
+ Subnet Calculator
+10.133.30.42
+ 
+Input
+10.133.30.42/32
+CIDR
+10.133.30.42/32
+Input IP
+10.133.30.42
+CIDR IP Range
+10.133.30.42 - 10.133.30.42
+Input Long
+176496170
+CIDR Long Range
+176496170 - 176496170
+Input Hex
+0A.85.1E.2A
+CIDR Hex Range
+0A.85.1E.2A - 0A.85.1E.2A
+IPs in Range
+1
+Mask Bits
+32
+Subnet Mask
+255.255.255.255
+Hex Subnet Mask
+FF.FF.FF.FF
+IP is contained in the following CIDR Blocks
+0.0.0.0/1
+0.0.0.0/2
+0.0.0.0/3
+0.0.0.0/4
+8.0.0.0/5
+8.0.0.0/6
+10.0.0.0/7
+10.0.0.0/8
+10.128.0.0/9
+10.128.0.0/10
+10.128.0.0/11
+10.128.0.0/12
+10.128.0.0/13
+10.132.0.0/14
+10.132.0.0/15
+10.133.0.0/16
+10.133.0.0/17
+10.133.0.0/18
+10.133.0.0/19
+10.133.16.0/20
+10.133.24.0/21
+10.133.28.0/22
+10.133.30.0/23
+10.133.30.0/24
+10.133.30.0/25
+10.133.30.0/26
+10.133.30.32/27
+10.133.30.32/28
+10.133.30.40/29
+10.133.30.40/30
+10.133.30.42/31
+10.133.30.42/32
+ABOUT SUBNET CALCULATOR
+The subnet calculator lets you enter a subnet range (CIDR) and see IP address information about that range You can type your range directly in CIDR notation, or use the optional Mask pull-down:
+
+74.125.227.0/29
+74.125.227.0, then select Optional Mask from dropdown
+This is a useful feature for service providers and network operator who frequently allocate and work with subnets. CIDR stands for Classless Inter-Domain Routing, and refers to the standard of dividing the entire IP address space into smaller networks of variable size.
+
+Your IP is: 102.89.22.120|  Contact Terms & Conditions Site Map API Privacy Phone: (866)-MXTOOLBOX / (866)-698-6652 |  © Copyright 2004-2021, MXToolBox, Inc, All rights reserved. US Patents 10839353 B2 & 11461738 B2
+ 
+burritos@banana-pancakes.com braunstrowman@banana-pancakes.com finnbalor@banana-pancakes.com ricflair@banana-pancakes.com randysavage@banana-pancakes.com
