@@ -1,0 +1,33 @@
+
+Domain:cloudfront.nethashlib
+print("**************PASSWORD CRACKER ******************")
+        
+# To check if the password
+# found or not.
+pass_found = 0                                     
+ 
+input_hash = input("Enter the hashed password:")
+ 
+pass_doc = input("\nEnter passwords filename including path(root / home/):")
+  
+try:
+    # trying to open the password file.
+    pass_file = open(pass_doc, 'r')             
+except:
+    print("Error:")
+    print(pass_doc, "is not found.\nPlease give the path of file correctly.")
+    quit()
+Registrar:MarkMonitor Inc.
+Registered On:2008-04-25
+Expires On:2024-04-25
+Updated On:2019-05-07
+Status:clientDeleteProhibited
+clientTransferProhibited
+clientUpdateProhibited
+serverDeleteProhibited
+serverTransferProhibited
+serverUpdateProhibited
+Name Servers:ns-1306.awsdns-35.org
+ns-1597.awsdns-07.co.uk
+ns-418.awsdns-52.com
+ns-666.awsdns-19.net
