@@ -1,0 +1,20 @@
+
+Test Ping
+A ping test is used to determine the connectivity and latency of Internet connected hosts. The online Ping Test uses the nping tool from the Nmap project.
+Moto5g.com
+
+
+ Remove limits & captcha with membership
+Starting Nping 0.7.40 ( https://nmap.org/nping ) at 2023-07-13 11:05 UTC
+SENT (0.1536s) ICMP [172.17.0.2 > 154.36.145.84 Echo request (type=8/code=0) id=51591 seq=1] IP [ttl=64 id=16659 iplen=28 ]
+RCVD (0.3392s) ICMP [154.36.145.84 > 172.17.0.2 Echo reply (type=0/code=0) id=51591 seq=1] IP [ttl=54 id=30558 iplen=28 ]
+SENT (1.1542s) ICMP [172.17.0.2 > 154.36.145.84 Echo request (type=8/code=0) id=51591 seq=2] IP [ttl=64 id=16659 iplen=28 ]
+RCVD (1.3592s) ICMP [154.36.145.84 > 172.17.0.2 Echo reply (type=0/code=0) id=51591 seq=2] IP [ttl=54 id=31547 iplen=28 ]
+SENT (2.1561s) ICMP [172.17.0.2 > 154.36.145.84 Echo request (type=8/code=0) id=51591 seq=3] IP [ttl=64 id=16659 iplen=28 ]
+RCVD (2.3792s) ICMP [154.36.145.84 > 172.17.0.2 Echo reply (type=0/code=0) id=51591 seq=3] IP [ttl=54 id=31832 iplen=28 ]
+SENT (3.1582s) ICMP [172.17.0.2 > 154.36.145.84 Echo request (type=8/code=0) id=51591 seq=4] IP [ttl=64 id=16659 iplen=28 ]
+RCVD (3.3992s) ICMP [154.36.145.84 > 172.17.0.2 Echo reply (type=0/code=0) id=51591 seq=4] IP [ttl=54 id=32611 iplen=28 ]
+ 
+Max rtt: 240.857ms | Min rtt: 185.364ms | Avg rtt: 213.466ms
+Raw packets sent: 4 (112B) | Rcvd: 4 (112B) | Lost: 0 (0.00%)
+Nping done: 1 IP address pinged in 3.43 seconds
